@@ -1,4 +1,18 @@
 <RCC>
-    <qresource prefix="sqGis">
+    <qresource prefix="/img">
+        <file alias="vector_x16">Resources/vector_x16.png</file>
+        <file alias="raster_x16">Resources/raster_x16.png</file>
+        <file alias="pan_x24">Resources/pan_x24.png</file>
+        <file alias="zoom-in_x24">Resources/zoom-in_x24.png</file>
+        <file alias="zoom-out_x24">Resources/zoom-out_x24.png</file>
+        <file alias="zoom-region_x24">Resources/zoom-region_x24.png</file>
+        <file alias="layer-raster-add_x24">Resources/layer-raster-add_x24.png</file>
+        <file alias="layer-vector-add_x24">Resources/layer-vector-add_x24.png</file>
+        <file alias="layer-info_x24">Resources/layer-info_x24.png</file>
+        <file alias="layer-mgr_x24">Resources/layer-mgr_x24.png</file>
+        <file alias="select_x24">Resources/select_x24.png</file>
+        <file alias="arrow-down_x24">Resources/arrow-down_x24.png</file>
+        <file alias="arrow-up_x24">Resources/arrow-up_x24.png</file>
+        <file alias="search_x24">Resources/search_x24.png</file>
     </qresource>
 </RCC>
