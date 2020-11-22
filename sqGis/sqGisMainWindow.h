@@ -44,21 +44,32 @@ protected:
 	void initQgsMapLayerTreeView();
 	void initQgsMapLayerPropertyTableView();
 
-	void addVectorLayer();
-	void addRasterLayer();
+	void addMapLayerToView(QgsMapLayer* vectorLayer);
+	//void addRasterLayer(QgsRasterLayer* rasterLayer);
 
-	void updateQgsMapLayerView();
-	void updateQgsVectorLayerFeatureView(QgsVectorLayer* layer,QStandardItem* parent);
-	void insertQgsMapLayerItem(QStandardItemModel* model, QgsMapLayer* layer);
+	void updateMapLayerView();
+	//void updateQgsVectorLayerFeatureView(QgsVectorLayer* layer,QStandardItem* parent);
+	void insertLayerToView(/*QStandardItemModel* model,*/ QgsMapLayer* layer);
 	void insertQgsVectorLayerFeatureItem(QgsFeature& feature, QStandardItem* parent);
 
 protected slots:
 	void showCursorCoor(QgsPointXY qgsPoint);
 	void on_openVectorLayerAction_triggered();
 	void on_openRasterLayerAction_triggered();
+	void on_openLocalTilesLayerAction_triggered();
+	void on_openOpenStreetMapLayerAction_triggered();
+	void on_openPostGisLayerAction_triggered();
+	void on_removeLayerAction_triggered();
 
 	void on_selectAction_triggered();
 	void on_zoomInAction_triggered();
 	void on_zoomOutAction_triggered();
 	void on_panAction_triggered();
+
+	void on_convertCoorAction_triggered();
+
+	void on_upLayerBtn_clicked();
+	void on_downLayerBtn_clicked();
+	void on_removeLayerBtn_clicked();
+	void on_visibleLayerBtn_clicked();
 };

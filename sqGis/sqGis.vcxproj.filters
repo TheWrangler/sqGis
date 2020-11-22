@@ -31,9 +31,15 @@
     <ClCompile Include="sqGisMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConvertCoorDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ConvertCoorDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -44,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="sqGisMainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ConvertCoorDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
