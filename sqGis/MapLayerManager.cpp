@@ -1,5 +1,5 @@
 #include "MapLayerManager.h"
-
+#include "options.h"
 #include <QStandardItemModel>
 
 MapLayerManager::MapLayerManager()
@@ -208,6 +208,10 @@ void MapLayerManager::addMapLayer(QgsMapLayer* layer, bool visible)
 
 	addMapLayerToView(layer, visible);
 	refreshMapLayers();
+
+#if PROMPT_INFO_MSG
+	qInfo() << QStringLiteral("Ìí¼ÓÍ¼²ã") << layer->name();
+#endif
 }
 
 QgsMapLayer* MapLayerManager::getMapLayer(QString layerName) 
@@ -256,10 +260,6 @@ void MapLayerManager::forwardMapLayer(QString layerName)
 	if (layerIndex == 0)
 		return;
 
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer index in Layer TreeView:" << layerIndex;
-#endif
-
 	_mapLayerItems.swap(layerIndex - 1, layerIndex);
 	forwardMapLayerFromView(layerName);
 	refreshMapLayers();
@@ -281,10 +281,6 @@ void MapLayerManager::backwardMapLayer(QString layerName)
 	if (layerIndex == _mapLayerItems.count() - 1)
 		return;
 
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer index in Layer TreeView:" << layerIndex;
-#endif
-
 	_mapLayerItems.swap(layerIndex, layerIndex + 1);
 	backwardMapLayerFromView(layerName);
 	refreshMapLayers();
@@ -304,6 +300,9 @@ void MapLayerManager::deleteMapLayer(QString layerName)
 		_mapLayerItems.erase(it);
 		deleteMapLayerFromView(layerName);
 		refreshMapLayers();
+#if PROMPT_INFO_MSG
+		qInfo() << QStringLiteral("É¾³ýÍ¼²ã") << layerName;
+#endif
 		return;
 	}
 }
@@ -315,4 +314,8 @@ void MapLayerManager::refreshMapCanvas(QgsMapCanvas* mapCanvas, QgsMapLayer* lay
 
 	mapCanvas->setLayers(_mapLayers);
 	mapCanvas->refresh();
+
+#if PROMPT_DEBUG_MSG
+	qDebug() << QStringLiteral("Ë¢ÐÂµØÍ¼»­²¼");
+#endif
 }

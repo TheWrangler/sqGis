@@ -1,10 +1,10 @@
 #pragma once
 
+#include <QCoreApplication>
 #include <QPlainTextEdit>
 #include <QTextStream>
 #include <QDateTime>
 #include "LogHandlerWrapper.h"
-#include <QDebug>
 
 class LogTextEdit : public QPlainTextEdit
 {
@@ -17,7 +17,7 @@ private:
 public:
 	explicit LogTextEdit(QWidget * parent = nullptr) :QPlainTextEdit(parent)
 	{
-		connect(LogHandlerWapper::instance(), SIGNAL(message(QtMsgType, QMessageLogContext, QString)), SLOT(outputMessage(QtMsgType, QMessageLogContext, QString)));
+		connect(LogHandlerWrapper::instance(), SIGNAL(message(QtMsgType, QMessageLogContext, QString)), SLOT(outputMessage(QtMsgType, QMessageLogContext, QString)));
 		openLogFile();
 	}
 
@@ -37,31 +37,37 @@ public slots:
 		switch (type)
 		{
 			case QtDebugMsg:
-				text = QString::fromLocal8Bit("Debug: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
-				htmlText = formatHtml(text, "green");
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Debug: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				htmlText = formatHtml(text, "white");
 				break;
 			case QtInfoMsg:
-				text = QString::fromLocal8Bit("Info: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
-				htmlText = formatHtml(text, "green");
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Info: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				htmlText = formatHtml(text, "white");
 				break;
 			case QtWarningMsg:
-				text = QString::fromLocal8Bit("Warning: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
-				htmlText = formatHtml(text, "rgb(255, 170, 0)");
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Warning: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				htmlText = formatHtml(text, "yellow");
 				break;
 			case QtCriticalMsg:
-				text = QString::fromLocal8Bit("Critical: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Critical: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
 				htmlText = formatHtml(text, "red");
 				break;
 			case QtFatalMsg:
-				text = QString::fromLocal8Bit("Fatal: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Fatal: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
 				htmlText = formatHtml(text, "red");
 				break;
 			default:
-				text = QString::fromLocal8Bit("Default: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
-				htmlText = formatHtml(text, "black");
+				text = QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t")
+					+ QString::fromLocal8Bit("Default: %1 (%2:%3, %4)\n").arg(QString::fromLocal8Bit(localMsg.constData())).arg(context.file).arg(context.line).arg(context.function);
+				htmlText = formatHtml(text, "white");
 		}
 
-		gOutStream << QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t") + text; //输出到txt文件
+		gOutStream << /*QDateTime::currentDateTime().toString("[yyyy-MM-dd hh.mm.ss]\t") + */text; //输出到txt文件
 		gOutStream.flush(); //刷新缓冲区
 		appendHtml(htmlText);
 	}
@@ -69,10 +75,13 @@ public slots:
 private:
 	void openLogFile()
 	{
-		logFile.setFileName("./Df_Soft_Log.txt");
+		QString appPath = QCoreApplication::applicationDirPath() + "/logs/";
+		logFile.setFileName(appPath
+							+ QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss")
+							+ "-logs.txt");
 		if (!logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
 		{
-			//
+			qFatal("create log file failed!");
 		}
 		else
 		{
@@ -82,6 +91,6 @@ private:
 
 	const QString formatHtml(const QString &qText, QString color)
 	{
-		return QString("<font style='font-size:16px; background-color:white; color:%2;'> %1 </font>").arg(qText).arg(color);
+		return QString("<font style='font-size:12px; background-color:transparent; color:%2;'> %1 </font>").arg(qText).arg(color);
 	}
 };

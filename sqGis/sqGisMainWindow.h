@@ -3,9 +3,14 @@
 #include <QMainWindow>
 #include <QStandardItem>
 #include <QLabel>
+#include <QTreeView>
+#include <QTableView>
 
 #include "ui_sqGisMainWindow.h"
 #include "MapLayerManager.h"
+#include "LayerManagerFrame.h"
+#include "./LogQt5/LogHandlerWrapper.h"
+#include "./LogQt5/LogTextEdit.h"
 #include "PointMapTool.h"
 
 #include <qgsmapcanvas.h>
@@ -24,6 +29,9 @@ public:
 
 private:
 	Ui::sqGisMainWindow ui;
+	LayerManagerFrame* _layerManagerFrame;
+	QTableView* _layerPropertyTableView;
+	LogTextEdit* _logTextEdit;
 
 	//状态栏显示标签
 	QLabel *_uiTooltipLabel;
@@ -50,6 +58,7 @@ protected:
 	unsigned int _polygonsMarkLayerNum;//多边形标绘层数目
 
 protected:
+	void initDockWidgets();
 	void initStatusBar();
 	void initMapCanvas();
 	void initMapTools();
@@ -60,6 +69,7 @@ protected:
 	void createPolygonMarkLayer(QString layerName);
 
 protected slots:
+	void refreshMapCanvas();
 	void showCursorCoor(QgsPointXY qgsPoint);
 	void addPointMark(const QgsPointXY & pt, Qt::MouseButton button);
 
@@ -82,9 +92,4 @@ protected slots:
 	void on_markPolygonAction_triggered();
 
 	void on_convertCoorAction_triggered();
-
-	void on_upLayerBtn_clicked();
-	void on_downLayerBtn_clicked();
-	void on_removeLayerBtn_clicked();
-	void on_visibleLayerBtn_clicked();
 };

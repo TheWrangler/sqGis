@@ -2,16 +2,16 @@
 
 #include <QObject>
 
-class LogHandlerWapper : public QObject
+class LogHandlerWrapper : public QObject
 {
 	Q_OBJECT
 public:
-	static LogHandlerWapper * instance();
+	static LogHandlerWrapper * instance();
 
 signals:
 	void message(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 private:
-	LogHandlerWapper();
-	static LogHandlerWapper * m_instance;
+	LogHandlerWrapper();
+	static LogHandlerWrapper * m_instance;
 };

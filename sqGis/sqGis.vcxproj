@@ -94,6 +94,7 @@
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="ConvertCoorDlg.cpp" />
     <ClCompile Include="GeometryEditDlg.cpp" />
+    <ClCompile Include="LayerManagerFrame.cpp" />
     <ClCompile Include="LogQt5\LogHandlerWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapLayerManager.cpp" />
@@ -110,6 +111,7 @@
     <QtUic Include="AboutDlg.ui" />
     <QtUic Include="ConvertCoorDlg.ui" />
     <QtUic Include="GeometryEditDlg.ui" />
+    <QtUic Include="LayerManagerFrame.ui" />
     <QtUic Include="sqGisMainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +120,7 @@
   <ItemGroup>
     <QtMoc Include="LogQt5\LogHandlerWrapper.h" />
     <QtMoc Include="LogQt5\LogTextEdit.h" />
+    <QtMoc Include="LayerManagerFrame.h" />
     <ClInclude Include="MapLayerManager.h" />
     <ClInclude Include="options.h" />
     <ClInclude Include="resource.h" />

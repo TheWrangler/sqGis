@@ -11,6 +11,7 @@
 #include <QIcon>
 #include <QLabel>
 #include <QInputDialog>
+#include <QDockWidget>
 
 #include <qgis.h>
 #include <qgsvectorlayer.h>
@@ -22,10 +23,20 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+	_layerManagerFrame = new LayerManagerFrame(this);
+	connect(_layerManagerFrame, SIGNAL(layersChanged()), this, SLOT(refreshMapCanvas()));
+	
+	_layerPropertyTableView = new QTableView(this);
+	_logTextEdit = new LogTextEdit(this);
+
+	initDockWidgets();
 	initStatusBar();
 
 	_mapLayerManager = new MapLayerManager();
-	_mapLayerManager->attachMapLayerView(ui.qgsMapLayerTreeView);
+	_mapLayerManager->attachMapLayerView(_layerManagerFrame->getLayerTreeView());
+
+	_layerManagerFrame->attachMapLayerManager(_mapLayerManager);
 
 	initMapCanvas();
 	initMapTools();
@@ -33,6 +44,28 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 
 sqGisMainWindow::~sqGisMainWindow()
 {
+}
+
+void sqGisMainWindow::initDockWidgets()
+{
+	setDockNestingEnabled(true);
+
+	QDockWidget* dockWidget1 = new QDockWidget(QStringLiteral("Õº≤„π‹¿Ì"),this);
+	dockWidget1->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	dockWidget1->setWidget(_layerManagerFrame);
+	addDockWidget(Qt::LeftDockWidgetArea, dockWidget1);
+
+	QDockWidget* dockWidget2 = new QDockWidget(QStringLiteral("Õº≤„ Ù–‘"), this);
+	dockWidget2->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	dockWidget2->setWidget(_layerPropertyTableView);
+	addDockWidget(Qt::LeftDockWidgetArea, dockWidget2);
+
+	QDockWidget* dockWidget3 = new QDockWidget(QStringLiteral("π˝≥Ã–≈œ¢"), this);
+	dockWidget3->setAllowedAreas(Qt::BottomDockWidgetArea);
+	dockWidget3->setWidget(_logTextEdit);
+	addDockWidget(Qt::BottomDockWidgetArea, dockWidget3);
+
+	//tabifyDockWidget(dockWidget2, dockWidget3);
 }
 
 void sqGisMainWindow::initStatusBar()
@@ -92,21 +125,6 @@ void sqGisMainWindow::initMapTools()
 	connect(_mapToolPoint, SIGNAL(canvasClicked(const QgsPointXY &, Qt::MouseButton)),this, SLOT(addPointMark(const QgsPointXY &, Qt::MouseButton)));
 }
 
-void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
-{
-#if PROMPT_DEBUG_MSG
-	qDebug() << "cursor: " << qgsPoint.x() << "," << qgsPoint.y();
-#endif
-
-	QgsCoordinateReferenceSystem dstCrs("EPSG:4326");
-	QgsCoordinateReferenceSystem srcCrs("EPSG:3857");
-	QgsCoordinateTransform crsTrans;
-	crsTrans.setSourceCrs(srcCrs);
-	crsTrans.setDestinationCrs(dstCrs);
-	QgsPointXY pt = crsTrans.transform(qgsPoint);
-	_uiCursorCoorLabel->setText(pt.toString());
-}
-
 void sqGisMainWindow::createPointsMarkLayer(QString layerName)
 {
 	QgsVectorLayer* layer = new QgsVectorLayer("Point?crs=epsg:3857&index=yes", layerName, "memory");
@@ -114,6 +132,9 @@ void sqGisMainWindow::createPointsMarkLayer(QString layerName)
 	if (!layer->isValid())
 	{
 		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØµ„±ÍªÊÕº≤„ ß∞‹!\n"));
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØ±ÍªÊÕº≤„") << layerName << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -136,7 +157,10 @@ void sqGisMainWindow::createLinesMarkLayer(QString layerName)
 	QgsVectorDataProvider* provider = layer->dataProvider();
 	if (!layer->isValid())
 	{
-		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØµ„±ÍªÊÕº≤„ ß∞‹!\n"));
+		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØœﬂ±ÍªÊÕº≤„ ß∞‹!\n"));
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØ±ÍªÊÕº≤„") << layerName << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -156,6 +180,26 @@ void sqGisMainWindow::createLinesMarkLayer(QString layerName)
 void sqGisMainWindow::createPolygonMarkLayer(QString layerName)
 {
 
+}
+
+void sqGisMainWindow::refreshMapCanvas()
+{
+	_mapLayerManager->refreshMapCanvas(_mapCanvas);
+}
+
+void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
+{
+#if PROMPT_DEBUG_MSG
+	qDebug() << QStringLiteral("π‚±Í◊¯±Í: ") << qgsPoint.x() << "," << qgsPoint.y();
+#endif
+
+	QgsCoordinateReferenceSystem dstCrs("EPSG:4326");
+	QgsCoordinateReferenceSystem srcCrs("EPSG:3857");
+	QgsCoordinateTransform crsTrans;
+	crsTrans.setSourceCrs(srcCrs);
+	crsTrans.setDestinationCrs(dstCrs);
+	QgsPointXY pt = crsTrans.transform(qgsPoint);
+	_uiCursorCoorLabel->setText(pt.toString());
 }
 
 void sqGisMainWindow::addPointMark(const QgsPointXY & pt, Qt::MouseButton button)
@@ -214,6 +258,9 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 	if (!layer->isValid())
 	{
 		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØÕº≤„ ß∞‹!\n") + fileName);
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØÕº≤„") << layer->name() << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -239,6 +286,9 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 	if (!layer->isValid())
 	{
 		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØÕº≤„ ß∞‹!\n") + fileName);
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØÕº≤„") << layer->name() << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -258,16 +308,14 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 		return;
 
 	QString filename = fileDialog.selectedFiles()[0];
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Local Tiles TMS XML:" << filename;
-#endif
-
 	QgsRasterLayer* layer = new QgsRasterLayer(filename, filename);
 
 	if (!layer->isValid())
 	{
 		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØÕº≤„ ß∞‹!\n") + filename);
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØÕº≤„") << layer->name() << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -278,16 +326,14 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 {
 	QString filename = QCoreApplication::applicationDirPath() + "/tms/openstreetmap_online_tms.xml";
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "OpenStreetMap TMS XML:" << filename;
-#endif
-
 	QgsRasterLayer* layer = new QgsRasterLayer(filename, filename);
 
 	if (!layer->isValid())
 	{
 		QMessageBox::critical(this, QStringLiteral("¥ÌŒÛ"), QStringLiteral("≥ı ºªØÕº≤„ ß∞‹!\n") + filename);
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("≥ı ºªØÕº≤„") << layer->name() << QStringLiteral(" ß∞‹!");
+#endif
 		return;
 	}
 
@@ -303,7 +349,7 @@ void sqGisMainWindow::on_openPostGisLayerAction_triggered()
 
 void sqGisMainWindow::on_removeLayerAction_triggered()
 {
-	on_removeLayerBtn_clicked();
+	_layerManagerFrame->on_removeLayerBtn_clicked();
 }
 
 void sqGisMainWindow::on_selectAction_triggered()
@@ -343,66 +389,6 @@ void sqGisMainWindow::on_markLineAction_triggered()
 void sqGisMainWindow::on_markPolygonAction_triggered()
 {
 
-}
-
-void sqGisMainWindow::on_upLayerBtn_clicked()
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-	int row = ui.qgsMapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer in Layer TreeView:" << layerName;
-#endif
-
-	_mapLayerManager->forwardMapLayer(layerName);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas);
-}
-
-void sqGisMainWindow::on_downLayerBtn_clicked()
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-	int row = ui.qgsMapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer in Layer TreeView:" << layerName;
-#endif
-
-	_mapLayerManager->backwardMapLayer(layerName);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas);
-}
-
-void sqGisMainWindow::on_removeLayerBtn_clicked()
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-	int row = ui.qgsMapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer in Layer TreeView:" << layerName;
-#endif
-
-	_mapLayerManager->deleteMapLayer(layerName);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas);
-}
-
-void sqGisMainWindow::on_visibleLayerBtn_clicked()
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-	int row = ui.qgsMapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << "Selected layer in Layer TreeView:" << layerName;
-#endif
-
-	
-	//TODO:
 }
 
 void sqGisMainWindow::on_convertCoorAction_triggered()

@@ -5,27 +5,27 @@
 #include <QtCore/QCoreApplication>
 #include <QString>
 
-LogHandlerWapper * LogHandlerWapper::m_instance = nullptr;
+LogHandlerWrapper * LogHandlerWrapper::m_instance = nullptr;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-	QMetaObject::invokeMethod(LogHandlerWapper::instance(), "message", Q_ARG(QtMsgType, type), Q_ARG(QMessageLogContext, context), Q_ARG(QString, QString(msg)));
+	QMetaObject::invokeMethod(LogHandlerWrapper::instance(), "message", Q_ARG(QtMsgType, type), Q_ARG(QMessageLogContext, context), Q_ARG(QString, QString(msg)));
 }
 
-LogHandlerWapper * LogHandlerWapper::instance()
+LogHandlerWrapper * LogHandlerWrapper::instance()
 {
 	static QMutex mutex;
 	if (!m_instance)
 	{
 		QMutexLocker locker(&mutex);
 		if (!m_instance)
-			m_instance = new LogHandlerWapper;
+			m_instance = new LogHandlerWrapper;
 	}
 
 	return m_instance;
 }
 
-LogHandlerWapper::LogHandlerWapper() :QObject(qApp)
+LogHandlerWrapper::LogHandlerWrapper() : QObject(qApp)
 {
 	qRegisterMetaType<QtMsgType>("QtMsgType");
 	qInstallMessageHandler(myMessageOutput);

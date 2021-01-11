@@ -1,3 +1,7 @@
 #pragma once
 
-#define PROMPT_DEBUG_MSG 0
+#define PROMPT_DEBUG_MSG 1
+#define PROMPT_INFO_MSG 1
+#define PROMPT_WARNNING_MSG 1
+#define PROMPT_CRITICAL_MSG 1
+#define PROMPT_FATAL_MSG 1

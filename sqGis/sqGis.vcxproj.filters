@@ -52,6 +52,9 @@
     <ClCompile Include="LogQt5\LogHandlerWrapper.cpp">
       <Filter>LogQt5</Filter>
     </ClCompile>
+    <ClCompile Include="LayerManagerFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
@@ -72,6 +75,9 @@
     <QtMoc Include="LogQt5\LogHandlerWrapper.h">
       <Filter>LogQt5</Filter>
     </QtMoc>
+    <QtMoc Include="LayerManagerFrame.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="sqGis.qrc">
@@ -89,6 +95,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GeometryEditDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="LayerManagerFrame.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
