@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sqGisMainWindow</string>
+   <string>sqGis地理信息系统</string>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
@@ -27,6 +30,9 @@
     <property name="title">
      <string>图层</string>
     </property>
+    <addaction name="newPointsMarkLayerAction"/>
+    <addaction name="newLinesMarkLayerAction"/>
+    <addaction name="newPolygonsMarkLayerAction"/>
     <addaction name="separator"/>
     <addaction name="openVectorLayerAction"/>
     <addaction name="openRasterLayerAction"/>
@@ -58,9 +64,9 @@
     <property name="title">
      <string>标绘</string>
     </property>
-    <addaction name="plotGeoPointAction"/>
-    <addaction name="plotGeoCurveAction"/>
-    <addaction name="plotGeoAreaAction"/>
+    <addaction name="markPointAction"/>
+    <addaction name="markLineAction"/>
+    <addaction name="markPolygonAction"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_3">
@@ -110,6 +116,11 @@
    <addaction name="zoomInAction"/>
    <addaction name="zoomOutAction"/>
    <addaction name="panAction"/>
+   <addaction name="separator"/>
+   <addaction name="markPointAction"/>
+   <addaction name="markLineAction"/>
+   <addaction name="markPolygonAction"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget">
@@ -295,7 +306,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>94</width>
+     <width>95</width>
      <height>113</height>
     </size>
    </property>
@@ -330,6 +341,21 @@
      </property>
      <item row="0" column="0">
       <widget class="QTableView" name="qgsMapObjTableView"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPlainTextEdit" name="plainTextEdit"/>
      </item>
     </layout>
    </widget>
@@ -394,17 +420,29 @@
     <string>还原</string>
    </property>
   </action>
-  <action name="plotGeoPointAction">
+  <action name="markPointAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/position_x24</normaloff>:/img/position_x24</iconset>
+   </property>
    <property name="text">
     <string>地理点</string>
    </property>
   </action>
-  <action name="plotGeoCurveAction">
+  <action name="markLineAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/line_x24</normaloff>:/img/line_x24</iconset>
+   </property>
    <property name="text">
     <string>地理轨迹</string>
    </property>
   </action>
-  <action name="plotGeoAreaAction">
+  <action name="markPolygonAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/polygon_x24</normaloff>:/img/polygon_x24</iconset>
+   </property>
    <property name="text">
     <string>封闭区域</string>
    </property>
@@ -537,6 +575,21 @@
   <action name="action_6">
    <property name="text">
     <string>退出</string>
+   </property>
+  </action>
+  <action name="newPointsMarkLayerAction">
+   <property name="text">
+    <string>新建点标绘图层</string>
+   </property>
+  </action>
+  <action name="newLinesMarkLayerAction">
+   <property name="text">
+    <string>新建线标绘图层</string>
+   </property>
+  </action>
+  <action name="newPolygonsMarkLayerAction">
+   <property name="text">
+    <string>新建多边形标绘图层</string>
    </property>
   </action>
  </widget>

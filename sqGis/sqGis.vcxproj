@@ -23,7 +23,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <QtInstall>Qt5.11.3_msvc2015</QtInstall>
+    <QtInstall>Qt5.11.3_vs2015_32bit</QtInstall>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">
@@ -42,7 +42,7 @@
     <Import Project="$(QtMsBuild)\qt.props" />
   </ImportGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;xml</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <QtModules>core;gui;widgets;xml</QtModules>
@@ -63,12 +63,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\OSGeo4W\apps\qgis-ltr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qgis_core.lib;qgis_app.lib;qgis_gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,8 +91,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="ConvertCoorDlg.cpp" />
+    <ClCompile Include="GeometryEditDlg.cpp" />
+    <ClCompile Include="LogQt5\LogHandlerWrapper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapLayerManager.cpp" />
+    <ClCompile Include="PointMapTool.cpp" />
     <ClCompile Include="sqGisMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,11 +107,26 @@
     <QtMoc Include="sqGisMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AboutDlg.ui" />
     <QtUic Include="ConvertCoorDlg.ui" />
+    <QtUic Include="GeometryEditDlg.ui" />
     <QtUic Include="sqGisMainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ConvertCoorDlg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="LogQt5\LogHandlerWrapper.h" />
+    <QtMoc Include="LogQt5\LogTextEdit.h" />
+    <ClInclude Include="MapLayerManager.h" />
+    <ClInclude Include="options.h" />
+    <ClInclude Include="resource.h" />
+    <QtMoc Include="AboutDlg.h" />
+    <QtMoc Include="GeometryEditDlg.h" />
+    <ClInclude Include="PointMapTool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="sqGis.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

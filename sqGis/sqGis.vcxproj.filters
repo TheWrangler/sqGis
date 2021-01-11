@@ -23,6 +23,9 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="LogQt5">
+      <UniqueIdentifier>{887d4cda-2e7e-4833-8a7d-689e9d773d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -34,6 +37,21 @@
     <ClCompile Include="ConvertCoorDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PointMapTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryEditDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapLayerManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogQt5\LogHandlerWrapper.cpp">
+      <Filter>LogQt5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
@@ -41,6 +59,18 @@
     </QtMoc>
     <QtMoc Include="ConvertCoorDlg.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AboutDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GeometryEditDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LogQt5\LogTextEdit.h">
+      <Filter>LogQt5</Filter>
+    </QtMoc>
+    <QtMoc Include="LogQt5\LogHandlerWrapper.h">
+      <Filter>LogQt5</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -55,5 +85,28 @@
     <QtUic Include="ConvertCoorDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="AboutDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GeometryEditDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PointMapTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapLayerManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="sqGis.rc" />
   </ItemGroup>
 </Project>

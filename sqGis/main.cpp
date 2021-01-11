@@ -8,8 +8,9 @@
 int main(int argc, char *argv[])
 {
 	QgsApplication a(argc, argv, true);
+	a.setWindowIcon(QPixmap(":/img/logo_x48"));
 
-	QFile qss("F:/sqGis/Win32/Release/qss/Integrid.qss");
+	QFile qss("F:/sqGis/Win32/Release/qss/Adaptic.qss");
 	qss.open(QFile::ReadOnly);
 	a.setStyleSheet(qss.readAll());
 	qss.close();

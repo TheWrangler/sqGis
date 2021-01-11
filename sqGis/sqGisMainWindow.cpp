@@ -1,5 +1,7 @@
 #include "sqGisMainWindow.h"
 #include "ConvertCoorDlg.h"
+#include "GeometryEditDlg.h"
+#include "options.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -8,6 +10,7 @@
 #include <QStandardItemModel>
 #include <QIcon>
 #include <QLabel>
+#include <QInputDialog>
 
 #include <qgis.h>
 #include <qgsvectorlayer.h>
@@ -21,7 +24,8 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	ui.setupUi(this);
 	initStatusBar();
 
-	initQgsMapLayerTreeView();
+	_mapLayerManager = new MapLayerManager();
+	_mapLayerManager->attachMapLayerView(ui.qgsMapLayerTreeView);
 
 	initMapCanvas();
 	initMapTools();
@@ -33,135 +37,66 @@ sqGisMainWindow::~sqGisMainWindow()
 
 void sqGisMainWindow::initStatusBar()
 {
-	m_uiCursorCoorLabel = new QLabel("Lon=?, Lat=?");
-	m_uiCursorCoorLabel->setAlignment(Qt::AlignCenter);
-	m_uiCursorCoorLabel->setMinimumSize(m_uiCursorCoorLabel->sizeHint());
-
 	statusBar()->setStyleSheet(QString("QStatusBar::item{border: 0px}"));
 	statusBar()->setSizeGripEnabled(false);
-	statusBar()->addWidget(m_uiCursorCoorLabel);
-}
 
-void sqGisMainWindow::initQgsMapLayerTreeView()
-{
-	QStandardItemModel* model = new QStandardItemModel(ui.qgsMapLayerTreeView);
-	model->setHorizontalHeaderLabels(QStringList() << QStringLiteral("图层名称") << QStringLiteral("可见性"));
-	ui.qgsMapLayerTreeView->setModel(model);
-}
+	_uiTooltipLabel = new QLabel();
+	_uiTooltipLabel->setMinimumSize(_uiTooltipLabel->sizeHint());
+	_uiTooltipLabel->setAlignment(Qt::AlignHCenter);
+	statusBar()->addWidget(_uiTooltipLabel);
 
-void sqGisMainWindow::initQgsMapLayerPropertyTableView()
-{
-
+	_uiCursorCoorLabel = new QLabel("Lon=?, Lat=?");
+	_uiCursorCoorLabel->setAlignment(Qt::AlignCenter);
+	_uiCursorCoorLabel->setMinimumSize(_uiCursorCoorLabel->sizeHint());
+	statusBar()->addWidget(_uiCursorCoorLabel);
 }
 
 void sqGisMainWindow::initMapCanvas()
 {
-	m_mapCanvas = new QgsMapCanvas();
-	this->setCentralWidget(m_mapCanvas);
+	_mapCanvas = new QgsMapCanvas();
+	this->setCentralWidget(_mapCanvas);
 
-	m_mapCanvas->setCanvasColor(QColor(255, 255, 255));
-	m_mapCanvas->setVisible(true);
-	m_mapCanvas->enableAntiAliasing(true);
+	_mapCanvas->setCanvasColor(QColor(255, 255, 255));
+	_mapCanvas->setVisible(true);
+	_mapCanvas->enableAntiAliasing(true);
 
-	m_mapCanvas->setLayers(m_mapLayers);
+	_mapCanvas->setLayers(_mapLayerManager->getMapLayers());
 
 	QgsPointXY center(12956100, 4845690);
-	m_mapCanvas->setCenter(center);
+	_mapCanvas->setCenter(center);
+
+	_pointsMarkLayerNum = 0;
+	_linesMarkLayerNum = 0;
+	_polygonsMarkLayerNum = 0;
 }
 
 void sqGisMainWindow::initMapTools()
 {
 	//canvas tools
-	m_mapToolPan = new QgsMapToolPan(m_mapCanvas);
-	m_mapToolPan->setAction(ui.panAction);
+	_mapToolPan = new QgsMapToolPan(_mapCanvas);
+	_mapToolPan->setAction(ui.panAction);
 
-	m_mapToolZoomIn = new QgsMapToolZoom(m_mapCanvas,false);
-	m_mapToolZoomIn->setAction(ui.zoomInAction);
+	_mapToolZoomIn = new QgsMapToolZoom(_mapCanvas,false);
+	_mapToolZoomIn->setAction(ui.zoomInAction);
 
-	m_mapToolZoomOut = new QgsMapToolZoom(m_mapCanvas,true);
-	m_mapToolZoomOut->setAction(ui.zoomOutAction);
+	_mapToolZoomOut = new QgsMapToolZoom(_mapCanvas,true);
+	_mapToolZoomOut->setAction(ui.zoomOutAction);
 
-	//connect canvas mouse coordinate signal
-	connect(m_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
-}
+	_mapToolPoint = new QgsMapToolEmitPoint(_mapCanvas);
+	_mapToolPoint->setAction(ui.markPointAction);
 
-void sqGisMainWindow::updateMapLayerView()
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-	if (model->hasChildren())
-		model->removeRows(0, model->rowCount());
+	//连接鼠标在画布上移动的信号
+	connect(_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
 
-	QList<QgsMapLayer*>::iterator it = m_mapLayers.begin();
-	while (it != m_mapLayers.end())
-	{
-		insertLayerToView(*it);
-		it++;
-	}
-}
-
-void sqGisMainWindow::addMapLayerToView(QgsMapLayer* layer)
-{
-	m_mapLayers.append(layer);
-	m_mapCanvas->setExtent(layer->extent());
-	m_mapCanvas->setLayers(m_mapLayers);
-	m_mapCanvas->refresh();
-
-	insertLayerToView(layer);
-}
-
-void sqGisMainWindow::insertLayerToView(QgsMapLayer* layer)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.qgsMapLayerTreeView->model());
-
-	QStandardItem * item = new QStandardItem(QString(layer->name()));
-	model->appendRow(item);
-	//int idx = model->rowCount();
-	//model->setItem(idx - 1, 1, new QStandardItem(layer->name()));
-	//model->setItem(idx - 1, 2, new QStandardItem((layer->crs()).description()));
-
-	QgsMapLayerType type = layer->type();
-	switch (type)
-	{
-		case QgsMapLayerType::VectorLayer :
-			item->setIcon(QIcon(":/img/vector_x16"));
-			//updateQgsVectorLayerFeatureView(dynamic_cast<QgsVectorLayer*>(layer),item);
-			break;
-		case QgsMapLayerType::RasterLayer :
-			item->setIcon(QIcon(":/img/raster_x16"));
-			break;
-		case QgsMapLayerType::MeshLayer:
-			item->setIcon(QIcon(":/img/vector_layer.png"));
-			break;
-		case QgsMapLayerType::PluginLayer:
-			item->setIcon(QIcon(":/img/vector_layer.png"));
-			break;
-	}
-}
-
-void sqGisMainWindow::insertQgsVectorLayerFeatureItem(QgsFeature& feature, QStandardItem* parent)
-{
-	QStandardItem * item = new QStandardItem(feature.id());
-	parent->appendRow(item);
-	int idx = parent->rowCount();
-	
-
-	QgsGeometry geom = feature.geometry();
-	switch (geom.type())
-	{
-		case QgsWkbTypes::PointGeometry:
-			break;
-		case QgsWkbTypes::LineGeometry:
-			break;
-		case QgsWkbTypes::PolygonGeometry:
-			break;
-		default:
-			break;
-	}
+	//连接标绘地理点的信号
+	connect(_mapToolPoint, SIGNAL(canvasClicked(const QgsPointXY &, Qt::MouseButton)),this, SLOT(addPointMark(const QgsPointXY &, Qt::MouseButton)));
 }
 
 void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 {
+#if PROMPT_DEBUG_MSG
 	qDebug() << "cursor: " << qgsPoint.x() << "," << qgsPoint.y();
+#endif
 
 	QgsCoordinateReferenceSystem dstCrs("EPSG:4326");
 	QgsCoordinateReferenceSystem srcCrs("EPSG:3857");
@@ -169,7 +104,95 @@ void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 	crsTrans.setSourceCrs(srcCrs);
 	crsTrans.setDestinationCrs(dstCrs);
 	QgsPointXY pt = crsTrans.transform(qgsPoint);
-	m_uiCursorCoorLabel->setText(pt.toString());
+	_uiCursorCoorLabel->setText(pt.toString());
+}
+
+void sqGisMainWindow::createPointsMarkLayer(QString layerName)
+{
+	QgsVectorLayer* layer = new QgsVectorLayer("Point?crs=epsg:3857&index=yes", layerName, "memory");
+	QgsVectorDataProvider* provider = layer->dataProvider();
+	if (!layer->isValid())
+	{
+		QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("初始化点标绘图层失败!\n"));
+		return;
+	}
+
+	_pointsMarkLayerNum++;
+
+	QList<QgsField> fields;
+	QgsField("name", QVariant::String);
+	QgsField("type", QVariant::String);
+	QgsField("height", QVariant::Double);
+
+	provider->addAttributes(fields);
+
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+}
+
+void sqGisMainWindow::createLinesMarkLayer(QString layerName)
+{
+	QgsVectorLayer* layer = new QgsVectorLayer("Line?crs=epsg:3857&index=yes", layerName, "memory");
+	QgsVectorDataProvider* provider = layer->dataProvider();
+	if (!layer->isValid())
+	{
+		QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("初始化点标绘图层失败!\n"));
+		return;
+	}
+
+	_linesMarkLayerNum++;
+
+	QList<QgsField> fields;
+	QgsField("name", QVariant::String);
+	QgsField("type", QVariant::String);
+	QgsField("height", QVariant::Double);
+
+	provider->addAttributes(fields);
+
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+}
+
+void sqGisMainWindow::createPolygonMarkLayer(QString layerName)
+{
+
+}
+
+void sqGisMainWindow::addPointMark(const QgsPointXY & pt, Qt::MouseButton button)
+{
+	GeometryEditDlg dlg;
+	dlg.attachGeometry(NULL);
+	if (dlg.exec() != QDialog::Accepted)
+		return;
+
+	//QgsGeometry
+
+
+}
+
+void sqGisMainWindow::on_newPointsMarkLayerAction_triggered()
+{
+	bool isOK;
+	QString preName = QStringLiteral("点标绘图层") + QString::number(_pointsMarkLayerNum + 1, 10);
+	QString layerName;
+
+	do
+	{
+		layerName = QInputDialog::getText(
+			this,
+			QStringLiteral("新建点标绘图层"),
+			QStringLiteral("请输入图层名"),
+			QLineEdit::Normal,
+			preName,
+			&isOK
+		);
+	} while (_mapLayerManager->isLayerExist(layerName));
+	
+
+	if (!isOK)
+		return;
+
+	createPointsMarkLayer(layerName);
 }
 
 void sqGisMainWindow::on_openVectorLayerAction_triggered()
@@ -179,7 +202,6 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 	fileDialog.setViewMode(QFileDialog::Detail);
 	fileDialog.setFileMode(QFileDialog::ExistingFile);
 	fileDialog.setWindowTitle(QStringLiteral("请选择矢量文件"));
-	//fileDialog.setDefaultSuffix("xml");
 	fileDialog.setNameFilter(QStringLiteral("矢量文件(*.shp)"));
 	if (fileDialog.exec() != QDialog::Accepted)
 		return;
@@ -195,7 +217,8 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 		return;
 	}
 
-	addMapLayerToView(layer);
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
 }
 
 void sqGisMainWindow::on_openRasterLayerAction_triggered()
@@ -205,7 +228,6 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 	fileDialog.setViewMode(QFileDialog::Detail);
 	fileDialog.setFileMode(QFileDialog::ExistingFile);
 	fileDialog.setWindowTitle(QStringLiteral("请选择栅格文件"));
-	//fileDialog.setDefaultSuffix("xml");
 	fileDialog.setNameFilter(QStringLiteral("栅格文件(*.tif)"));
 	if (fileDialog.exec() != QDialog::Accepted)
 		return;
@@ -220,7 +242,8 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 		return;
 	}
 
-	addMapLayerToView(layer);
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
 }
 
 void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
@@ -230,15 +253,16 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 	fileDialog.setViewMode(QFileDialog::Detail);
 	fileDialog.setFileMode(QFileDialog::ExistingFile);
 	fileDialog.setWindowTitle(QStringLiteral("请选择TMS服务配置文件"));
-	//fileDialog.setDefaultSuffix("xml");
-	fileDialog.setNameFilter(QStringLiteral("XML文件(*.xml)"));
+	fileDialog.setNameFilter(QStringLiteral("TMS服务配置文件(*.xml)"));
 	if (fileDialog.exec() != QDialog::Accepted)
 		return;
 
 	QString filename = fileDialog.selectedFiles()[0];
+
+#if PROMPT_DEBUG_MSG
 	qDebug() << "Local Tiles TMS XML:" << filename;
-	//QFileInfo fi(filename);
-	//QString basename = fi.baseName();
+#endif
+
 	QgsRasterLayer* layer = new QgsRasterLayer(filename, filename);
 
 	if (!layer->isValid())
@@ -247,13 +271,18 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 		return;
 	}
 
-	addMapLayerToView(layer);
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
 }
 
 void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 {
-	QString filename = QCoreApplication::applicationDirPath() + "/tms/openstreetmap_tms.xml";
+	QString filename = QCoreApplication::applicationDirPath() + "/tms/openstreetmap_online_tms.xml";
+
+#if PROMPT_DEBUG_MSG
 	qDebug() << "OpenStreetMap TMS XML:" << filename;
+#endif
+
 	QgsRasterLayer* layer = new QgsRasterLayer(filename, filename);
 
 	if (!layer->isValid())
@@ -262,7 +291,8 @@ void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 		return;
 	}
 
-	addMapLayerToView(layer);
+	_mapLayerManager->addMapLayer(layer);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
 }
 
 void sqGisMainWindow::on_openPostGisLayerAction_triggered()
@@ -278,32 +308,41 @@ void sqGisMainWindow::on_removeLayerAction_triggered()
 
 void sqGisMainWindow::on_selectAction_triggered()
 {
-	m_mapCanvas->unsetMapTool(m_mapCanvas->mapTool());
-	m_mapCanvas->unsetCursor();
+	_mapCanvas->unsetMapTool(_mapCanvas->mapTool());
+	_mapCanvas->unsetCursor();
 }
 
 void sqGisMainWindow::on_zoomInAction_triggered()
 {
-	m_mapCanvas->setMapTool(m_mapToolZoomIn);
-	m_mapCanvas->setCursor(QPixmap(":/img/zoom-in_x24"));
+	_mapCanvas->setMapTool(_mapToolZoomIn);
+	_mapCanvas->setCursor(QPixmap(":/img/zoom-in_x24"));
 }
 
 void sqGisMainWindow::on_zoomOutAction_triggered()
 {
-	m_mapCanvas->setMapTool(m_mapToolZoomOut);
-	m_mapCanvas->setCursor(QPixmap(":/img/zoom-out_x24"));
+	_mapCanvas->setMapTool(_mapToolZoomOut);
+	_mapCanvas->setCursor(QPixmap(":/img/zoom-out_x24"));
 }
 
 void sqGisMainWindow::on_panAction_triggered()
 {
-	m_mapCanvas->setMapTool(m_mapToolPan);
+	_mapCanvas->setMapTool(_mapToolPan);
 }
 
-void sqGisMainWindow::on_convertCoorAction_triggered()
+void sqGisMainWindow::on_markPointAction_triggered()
 {
-	ConvertCoorDlg dlg;
-	//dlg.setWindowModality(Qt::WindowModal);
-	dlg.exec();
+	_mapCanvas->setMapTool(_mapToolPoint);
+	_mapCanvas->setCursor(QPixmap(":/img/position_x24"));
+}
+
+void sqGisMainWindow::on_markLineAction_triggered()
+{
+
+}
+
+void sqGisMainWindow::on_markPolygonAction_triggered()
+{
+
 }
 
 void sqGisMainWindow::on_upLayerBtn_clicked()
@@ -313,28 +352,12 @@ void sqGisMainWindow::on_upLayerBtn_clicked()
 	QModelIndex index = model->index(row, 0);
 	QString layerName = model->data(index).toString();
 
+#if PROMPT_DEBUG_MSG
 	qDebug() << "Selected layer in Layer TreeView:" << layerName;
+#endif
 
-	QList<QgsMapLayer*>::iterator itr = m_mapLayers.begin();
-	int layerIndex = 0;
-	while (itr != m_mapLayers.end())
-	{
-		if ((*itr)->name() == layerName)
-			break;
-
-		layerIndex++;
-		itr++;
-	}
-
-	if (layerIndex == 0)
-		return;
-
-	qDebug() << "Selected layer index in Layer TreeView:" << layerIndex;
-	m_mapLayers.swap(layerIndex - 1, layerIndex);
-	updateMapLayerView();
-
-	m_mapCanvas->setLayers(m_mapLayers);
-	m_mapCanvas->refresh();
+	_mapLayerManager->forwardMapLayer(layerName);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas);
 }
 
 void sqGisMainWindow::on_downLayerBtn_clicked()
@@ -344,28 +367,12 @@ void sqGisMainWindow::on_downLayerBtn_clicked()
 	QModelIndex index = model->index(row, 0);
 	QString layerName = model->data(index).toString();
 
+#if PROMPT_DEBUG_MSG
 	qDebug() << "Selected layer in Layer TreeView:" << layerName;
+#endif
 
-	QList<QgsMapLayer*>::iterator itr = m_mapLayers.begin();
-	int layerIndex = 0;
-	while (itr != m_mapLayers.end())
-	{
-		if ((*itr)->name() == layerName)
-			break;
-
-		layerIndex++;
-		itr++;
-	}
-
-	if (layerIndex == m_mapLayers.count()-1)
-		return;
-
-	qDebug() << "Selected layer index in Layer TreeView:" << layerIndex;
-	m_mapLayers.swap(layerIndex, layerIndex+1);
-	updateMapLayerView();
-
-	m_mapCanvas->setLayers(m_mapLayers);
-	m_mapCanvas->refresh();
+	_mapLayerManager->backwardMapLayer(layerName);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas);
 }
 
 void sqGisMainWindow::on_removeLayerBtn_clicked()
@@ -375,27 +382,12 @@ void sqGisMainWindow::on_removeLayerBtn_clicked()
 	QModelIndex index = model->index(row, 0);
 	QString layerName = model->data(index).toString();
 
+#if PROMPT_DEBUG_MSG
 	qDebug() << "Selected layer in Layer TreeView:" << layerName;
+#endif
 
-	QList<QgsMapLayer*>::iterator itr = m_mapLayers.begin();
-	int layerIndex = 0;
-	while (itr != m_mapLayers.end())
-	{
-		if ((*itr)->name() == layerName)
-			break;
-
-		layerIndex++;
-		itr++;
-	}
-	
-	if (itr == m_mapLayers.end())
-		return;
-
-	m_mapLayers.removeAt(layerIndex);
-	updateMapLayerView();
-
-	m_mapCanvas->setLayers(m_mapLayers);
-	m_mapCanvas->refresh();
+	_mapLayerManager->deleteMapLayer(layerName);
+	_mapLayerManager->refreshMapCanvas(_mapCanvas);
 }
 
 void sqGisMainWindow::on_visibleLayerBtn_clicked()
@@ -405,19 +397,16 @@ void sqGisMainWindow::on_visibleLayerBtn_clicked()
 	QModelIndex index = model->index(row, 0);
 	QString layerName = model->data(index).toString();
 
+#if PROMPT_DEBUG_MSG
 	qDebug() << "Selected layer in Layer TreeView:" << layerName;
+#endif
 
-	QList<QgsMapLayer*>::iterator itr = m_mapLayers.begin();
-	int layerIndex = 0;
-	while (itr != m_mapLayers.end())
-	{
-		if ((*itr)->name() == layerName)
-			break;
+	
+	//TODO:
+}
 
-		layerIndex++;
-		itr++;
-	}
-
-	if (itr == m_mapLayers.end())
-		return;
+void sqGisMainWindow::on_convertCoorAction_triggered()
+{
+	ConvertCoorDlg dlg;
+	dlg.exec();
 }
