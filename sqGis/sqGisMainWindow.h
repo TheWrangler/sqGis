@@ -69,7 +69,7 @@ protected:
 	void createPolygonMarkLayer(QString layerName);
 
 protected slots:
-	void refreshMapCanvas();
+	void refreshMapCanvas(QgsMapLayer* layer);
 	void showCursorCoor(QgsPointXY qgsPoint);
 	void addPointMark(const QgsPointXY & pt, Qt::MouseButton button);
 
@@ -92,4 +92,6 @@ protected slots:
 	void on_markPolygonAction_triggered();
 
 	void on_convertCoorAction_triggered();
+
+	void on_aboutAction_triggered();
 };

@@ -4,7 +4,7 @@
 
 MapLayerManager::MapLayerManager()
 {
-	_mapLayerView = NULL;
+	
 }
 
 MapLayerManager::~MapLayerManager()
@@ -39,143 +39,6 @@ void MapLayerManager::refreshMapLayers()
 	}
 }
 
-void MapLayerManager::addMapLayerToView(QgsMapLayer* layer, bool visible)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	QStandardItem * item = new QStandardItem(QString(layer->name()));
-	//model->appendRow(item);
-	model->insertRow(0, item);
-	//int idx = model->rowCount();
-	//model->setItem(idx - 1, 1, new QStandardItem(layer->name()));
-	//model->setItem(idx - 1, 2, new QStandardItem((layer->crs()).description()));
-
-	QgsMapLayerType type = layer->type();
-	switch (type)
-	{
-		case QgsMapLayerType::VectorLayer:
-			item->setIcon(QIcon(":/img/vector_x16"));
-			break;
-		case QgsMapLayerType::RasterLayer:
-			item->setIcon(QIcon(":/img/raster_x16"));
-			break;
-		//case QgsMapLayerType::MeshLayer:
-		//	item->setIcon(QIcon(":/img/vector_layer.png"));
-		//	break;
-		//case QgsMapLayerType::PluginLayer:
-		//	item->setIcon(QIcon(":/img/vector_layer.png"));
-		//	break;
-	}
-}
-
-void MapLayerManager::hideMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		item->setIcon(QIcon(":/img/unvisible_x16"));
-		return;
-	}
-}
-
-void MapLayerManager::showMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		QgsMapLayer *layer = getMapLayer(layerName);
-		QgsMapLayerType type = layer->type();
-		switch (type)
-		{
-			case QgsMapLayerType::VectorLayer:
-				item->setIcon(QIcon(":/img/vector_x16"));
-				break;
-			case QgsMapLayerType::RasterLayer:
-				item->setIcon(QIcon(":/img/raster_x16"));
-				break;
-		}
-		return;
-	}
-}
-
-void MapLayerManager::forwardMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		if (i == 0)
-			return;
-
-		QStandardItem *swapItem = model->item(i - 1);
-		model->setItem(i - 1, item);
-		model->setItem(i, swapItem);
-		QModelIndex index = model->index(i - 1, 0);
-		_mapLayerView->setCurrentIndex(index);
-		return;
-	}
-}
-
-void MapLayerManager::backwardMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		if (i == model->rowCount() - 1)
-			return;
-
-		QStandardItem *swapItem = model->item(i + 1);
-		model->setItem(i + 1, item);
-		model->setItem(i, swapItem);
-		QModelIndex index = model->index(i+1,0);
-		_mapLayerView->setCurrentIndex(index);
-		return;
-	}
-}
-
-void MapLayerManager::deleteMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		model->removeRow(i);
-		return;
-	}
-}
-
-void MapLayerManager::attachMapLayerView(QTreeView* tree)
-{
-	if (_mapLayerView != NULL)
-	{
-		QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(_mapLayerView->model());
-		if (model->hasChildren())
-			model->removeRows(0, model->rowCount());
-	}
-
-	_mapLayerView = tree;
-	QStandardItemModel* model = new QStandardItemModel(_mapLayerView);
-	model->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Í¼²ãÃû³Æ"));
-	_mapLayerView->setModel(model);
-}
-
 bool MapLayerManager::isLayerExist(QString layerName)
 {
 	if (getMapLayerItem(layerName) == NULL)
@@ -206,12 +69,7 @@ void MapLayerManager::addMapLayer(QgsMapLayer* layer, bool visible)
 		_mapLayerItems.insert(it, layerItem);
 	}
 
-	addMapLayerToView(layer, visible);
 	refreshMapLayers();
-
-#if PROMPT_INFO_MSG
-	qInfo() << QStringLiteral("Ìí¼ÓÍ¼²ã") << layer->name();
-#endif
 }
 
 QgsMapLayer* MapLayerManager::getMapLayer(QString layerName) 
@@ -229,7 +87,6 @@ void MapLayerManager::hideMapLayer(QString layerName)
 		return;
 
 	layer->_visible = false;
-	hideMapLayerFromView(layerName);
 	refreshMapLayers();
 }
 
@@ -240,7 +97,6 @@ void MapLayerManager::showMapLayer(QString layerName)
 		return;
 
 	layer->_visible = true;
-	showMapLayerFromView(layerName);
 	refreshMapLayers();
 }
 
@@ -261,7 +117,6 @@ void MapLayerManager::forwardMapLayer(QString layerName)
 		return;
 
 	_mapLayerItems.swap(layerIndex - 1, layerIndex);
-	forwardMapLayerFromView(layerName);
 	refreshMapLayers();
 }
 
@@ -282,7 +137,6 @@ void MapLayerManager::backwardMapLayer(QString layerName)
 		return;
 
 	_mapLayerItems.swap(layerIndex, layerIndex + 1);
-	backwardMapLayerFromView(layerName);
 	refreshMapLayers();
 }
 
@@ -298,24 +152,10 @@ void MapLayerManager::deleteMapLayer(QString layerName)
 		}
 
 		_mapLayerItems.erase(it);
-		deleteMapLayerFromView(layerName);
 		refreshMapLayers();
 #if PROMPT_INFO_MSG
 		qInfo() << QStringLiteral("É¾³ýÍ¼²ã") << layerName;
 #endif
 		return;
 	}
-}
-
-void MapLayerManager::refreshMapCanvas(QgsMapCanvas* mapCanvas, QgsMapLayer* layer)
-{
-	if(layer != NULL)
-		mapCanvas->setExtent(layer->extent());
-
-	mapCanvas->setLayers(_mapLayers);
-	mapCanvas->refresh();
-
-#if PROMPT_DEBUG_MSG
-	qDebug() << QStringLiteral("Ë¢ÐÂµØÍ¼»­²¼");
-#endif
 }

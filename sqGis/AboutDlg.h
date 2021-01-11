@@ -13,4 +13,9 @@ public:
 
 private:
 	Ui::AboutDlg ui;
+
+	void initAppInfo();
+	void initOSGInfo();
+	void initQGisInfo();
+	void initQtInfo();
 };

@@ -20,21 +20,11 @@ protected:
 	QList<PTR_MapLayerItem> _mapLayerItems;//所有图层列表，包含隐藏图层
 	QList<QgsMapLayer *> _mapLayers;//供地图显示的图层列表
 
-	QTreeView* _mapLayerView;
-
 protected:
 	PTR_MapLayerItem getMapLayerItem(QString layerName);
 	void refreshMapLayers();
-	void addMapLayerToView(QgsMapLayer* layer, bool visible);
-	void hideMapLayerFromView(QString layerName);
-	void showMapLayerFromView(QString layerName);
-	void forwardMapLayerFromView(QString layerName);
-	void backwardMapLayerFromView(QString layerName);
-	void deleteMapLayerFromView(QString layerName);
-	
-public:
-	void attachMapLayerView(QTreeView* tree);
 
+public:
 	bool isLayerExist(QString layerName);
 	bool isLayerVisible(QString layerName);
 	void addMapLayer(QgsMapLayer* layer,bool visible = true);
@@ -48,6 +38,5 @@ public:
 	void deleteMapLayer(QString layerName);
 
 	const QList<QgsMapLayer *>& getMapLayers() { return _mapLayers; }
-	void refreshMapCanvas(QgsMapCanvas* mapCanvas, QgsMapLayer* layer = NULL);
 };
 

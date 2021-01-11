@@ -6,13 +6,153 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>205</height>
+    <width>485</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>关于sqGis</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="logoLabel">
+       <property name="minimumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;sqGisTool&lt;/font&gt;           1.0.0&lt;br/&gt;onlymydreams@126.com&lt;br/&gt;版本更新请至&lt;a href=&quot;https://github.com/TheWrangler/sqGis&quot;&gt;https://github.com/TheWrangler/sqGis&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;sqGisTool的开发使用了以下开源软件或库:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="horizontalSpacing">
+      <number>10</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="osgLabel">
+       <property name="minimumSize">
+        <size>
+         <width>149</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>149</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;OSGeo4W&lt;/font&gt;        1.0.0&lt;br/&gt;开源空间信息基金会（OSGeo）是一个全球性非盈利组织，&lt;br/&gt;目标是建立和推广高品质的空间信息软件，&lt;br/&gt;OSGeo4W提供了开发空间信息软件所必须的软件和库。&lt;br/&gt;更多关于OSGeo组织的信息请访问&lt;a href=&quot;https://www.osgeo.org/&quot;&gt;https://www.osgeo.org/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="qgisLabel">
+       <property name="minimumSize">
+        <size>
+         <width>149</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>149</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;QGis&lt;/font&gt; 3.10.10 LTR&lt;br/&gt;QGis是一个夸平台的基于C++ Qt的Gis桌面工具和引擎，&lt;br/&gt;提供了对地理数据的编辑、分析和显示功能。&lt;br/&gt;QGis还使用Python提供了插件扩展的能力。&lt;br/&gt;更多关于QGis的信息请访问&lt;a href=&quot;https://www.qgis.org/&quot;&gt;https://www.qgis.org/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="qtLabel">
+       <property name="minimumSize">
+        <size>
+         <width>57</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>57</width>
+         <height>57</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;Qt 5&lt;/font&gt; 5.11.3 community&lt;br/&gt;Qt 5是一个夸平台的基于C++ 的嵌入式和桌面库，&lt;br/&gt;Qt 5使用商业版和社区版发布。&lt;br/&gt;更多关于Qt 5的信息请访问&lt;a href=&quot;https://www.qt.io/&quot;&gt;https://www.qt.io/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

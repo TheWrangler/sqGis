@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sqGis地理信息系统</string>
+   <string>sqGisTool</string>
   </property>
   <property name="dockNestingEnabled">
    <bool>true</bool>
@@ -73,7 +73,7 @@
     <property name="title">
      <string>关于</string>
     </property>
-    <addaction name="action_sqGis"/>
+    <addaction name="aboutAction"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -245,7 +245,7 @@
     <string>可视域分析</string>
    </property>
   </action>
-  <action name="action_sqGis">
+  <action name="aboutAction">
    <property name="text">
     <string>关于sqGis</string>
    </property>

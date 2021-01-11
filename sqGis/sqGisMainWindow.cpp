@@ -2,6 +2,7 @@
 #include "ConvertCoorDlg.h"
 #include "GeometryEditDlg.h"
 #include "options.h"
+#include "AboutDlg.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -25,7 +26,7 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	ui.setupUi(this);
 
 	_layerManagerFrame = new LayerManagerFrame(this);
-	connect(_layerManagerFrame, SIGNAL(layersChanged()), this, SLOT(refreshMapCanvas()));
+	connect(_layerManagerFrame, SIGNAL(layersChanged(QgsMapLayer*)), this, SLOT(refreshMapCanvas(QgsMapLayer*)));
 	
 	_layerPropertyTableView = new QTableView(this);
 	_logTextEdit = new LogTextEdit(this);
@@ -34,8 +35,6 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	initStatusBar();
 
 	_mapLayerManager = new MapLayerManager();
-	_mapLayerManager->attachMapLayerView(_layerManagerFrame->getLayerTreeView());
-
 	_layerManagerFrame->attachMapLayerManager(_mapLayerManager);
 
 	initMapCanvas();
@@ -61,11 +60,11 @@ void sqGisMainWindow::initDockWidgets()
 	addDockWidget(Qt::LeftDockWidgetArea, dockWidget2);
 
 	QDockWidget* dockWidget3 = new QDockWidget(QStringLiteral("过程信息"), this);
-	dockWidget3->setAllowedAreas(Qt::BottomDockWidgetArea);
+	dockWidget3->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	dockWidget3->setWidget(_logTextEdit);
-	addDockWidget(Qt::BottomDockWidgetArea, dockWidget3);
+	addDockWidget(Qt::LeftDockWidgetArea, dockWidget3);
 
-	//tabifyDockWidget(dockWidget2, dockWidget3);
+	tabifyDockWidget(dockWidget2, dockWidget3);
 }
 
 void sqGisMainWindow::initStatusBar()
@@ -144,11 +143,9 @@ void sqGisMainWindow::createPointsMarkLayer(QString layerName)
 	QgsField("name", QVariant::String);
 	QgsField("type", QVariant::String);
 	QgsField("height", QVariant::Double);
-
 	provider->addAttributes(fields);
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::createLinesMarkLayer(QString layerName)
@@ -170,11 +167,9 @@ void sqGisMainWindow::createLinesMarkLayer(QString layerName)
 	QgsField("name", QVariant::String);
 	QgsField("type", QVariant::String);
 	QgsField("height", QVariant::Double);
-
 	provider->addAttributes(fields);
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::createPolygonMarkLayer(QString layerName)
@@ -182,9 +177,17 @@ void sqGisMainWindow::createPolygonMarkLayer(QString layerName)
 
 }
 
-void sqGisMainWindow::refreshMapCanvas()
+void sqGisMainWindow::refreshMapCanvas(QgsMapLayer* layer)
 {
-	_mapLayerManager->refreshMapCanvas(_mapCanvas);
+	if (layer != NULL)
+		_mapCanvas->setExtent(layer->extent());
+
+	_mapCanvas->setLayers(_mapLayerManager->getMapLayers());
+	_mapCanvas->refresh();
+
+#if PROMPT_DEBUG_MSG
+	qDebug() << QStringLiteral("刷新地图画布");
+#endif
 }
 
 void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
@@ -264,8 +267,7 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 		return;
 	}
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::on_openRasterLayerAction_triggered()
@@ -292,8 +294,7 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 		return;
 	}
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
@@ -319,8 +320,7 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 		return;
 	}
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
@@ -337,8 +337,7 @@ void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 		return;
 	}
 
-	_mapLayerManager->addMapLayer(layer);
-	_mapLayerManager->refreshMapCanvas(_mapCanvas, layer);
+	_layerManagerFrame->addMapLayerToView(layer);
 }
 
 void sqGisMainWindow::on_openPostGisLayerAction_triggered()
@@ -394,5 +393,11 @@ void sqGisMainWindow::on_markPolygonAction_triggered()
 void sqGisMainWindow::on_convertCoorAction_triggered()
 {
 	ConvertCoorDlg dlg;
+	dlg.exec();
+}
+
+void sqGisMainWindow::on_aboutAction_triggered()
+{
+	AboutDlg dlg;
 	dlg.exec();
 }
