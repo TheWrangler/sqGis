@@ -93,11 +93,14 @@
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
     <ClCompile Include="ConvertCoorDlg.cpp" />
-    <ClCompile Include="GeometryEditDlg.cpp" />
+    <ClCompile Include="FeatureEditDlg.cpp" />
     <ClCompile Include="LayerManagerFrame.cpp" />
     <ClCompile Include="LogQt5\LogHandlerWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapLayerManager.cpp" />
+    <ClCompile Include="MarkLayer\MarkFeatureSettings.cpp" />
+    <ClCompile Include="MarkLayer\MarkLayer.cpp" />
+    <ClCompile Include="MarkLayer\PointMarkLayer.cpp" />
     <ClCompile Include="PointMapTool.cpp" />
     <ClCompile Include="sqGisMainWindow.cpp" />
   </ItemGroup>
@@ -110,7 +113,7 @@
   <ItemGroup>
     <QtUic Include="AboutDlg.ui" />
     <QtUic Include="ConvertCoorDlg.ui" />
-    <QtUic Include="GeometryEditDlg.ui" />
+    <QtUic Include="FeatureEditDlg.ui" />
     <QtUic Include="LayerManagerFrame.ui" />
     <QtUic Include="sqGisMainWindow.ui" />
   </ItemGroup>
@@ -122,10 +125,13 @@
     <QtMoc Include="LogQt5\LogTextEdit.h" />
     <QtMoc Include="LayerManagerFrame.h" />
     <ClInclude Include="MapLayerManager.h" />
+    <ClInclude Include="MarkLayer\MarkFeatureSettings.h" />
+    <ClInclude Include="MarkLayer\MarkLayer.h" />
+    <ClInclude Include="MarkLayer\PointMarkLayer.h" />
     <ClInclude Include="options.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="AboutDlg.h" />
-    <QtMoc Include="GeometryEditDlg.h" />
+    <QtMoc Include="FeatureEditDlg.h" />
     <ClInclude Include="PointMapTool.h" />
   </ItemGroup>
   <ItemGroup>

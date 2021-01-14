@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>380</height>
+    <width>502</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,7 +41,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;sqGisTool&lt;/font&gt;           1.0.0&lt;br/&gt;onlymydreams@126.com&lt;br/&gt;版本更新请至&lt;a href=&quot;https://github.com/TheWrangler/sqGis&quot;&gt;https://github.com/TheWrangler/sqGis&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;微软雅黑&quot;&gt;sqGisTool&lt;/font&gt;          &lt;font size=&quot;3&quot; face=&quot;微软雅黑&quot;&gt; 1.0.0&lt;br/&gt;onlymydreams@126.com&lt;br/&gt;版本更新请至&lt;a href=&quot;https://github.com/TheWrangler/sqGis&quot;&gt;https://github.com/TheWrangler/sqGis&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -94,7 +94,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;OSGeo4W&lt;/font&gt;        1.0.0&lt;br/&gt;开源空间信息基金会（OSGeo）是一个全球性非盈利组织，&lt;br/&gt;目标是建立和推广高品质的空间信息软件，&lt;br/&gt;OSGeo4W提供了开发空间信息软件所必须的软件和库。&lt;br/&gt;更多关于OSGeo组织的信息请访问&lt;a href=&quot;https://www.osgeo.org/&quot;&gt;https://www.osgeo.org/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;微软雅黑&quot;&gt;OSGeo4W&lt;/font&gt;&lt;font size=&quot;3&quot; face=&quot;微软雅黑&quot;&gt; 1.0.0&lt;br/&gt;开源空间信息基金会（OSGeo）是一个全球性非盈利组织，&lt;br/&gt;目标是建立和推广高品质的空间信息软件，&lt;br/&gt;OSGeo4W提供了开发空间信息软件所必须的软件和库。&lt;br/&gt;更多关于OSGeo组织的信息请访问&lt;a href=&quot;https://www.osgeo.org/&quot;&gt;https://www.osgeo.org/&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -120,7 +120,7 @@
      <item row="1" column="1">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;QGis&lt;/font&gt; 3.10.10 LTR&lt;br/&gt;QGis是一个夸平台的基于C++ Qt的Gis桌面工具和引擎，&lt;br/&gt;提供了对地理数据的编辑、分析和显示功能。&lt;br/&gt;QGis还使用Python提供了插件扩展的能力。&lt;br/&gt;更多关于QGis的信息请访问&lt;a href=&quot;https://www.qgis.org/&quot;&gt;https://www.qgis.org/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;微软雅黑&quot;&gt;QGis&lt;/font&gt;&lt;font size=&quot;3&quot; face=&quot;微软雅黑&quot;&gt; 3.10.10 LTR&lt;br/&gt;QGis是一个夸平台的基于C++ Qt的Gis桌面工具和引擎，&lt;br/&gt;提供了对地理数据的编辑、分析和显示功能。&lt;br/&gt;QGis还使用Python提供了插件扩展的能力。&lt;br/&gt;更多关于QGis的信息请访问&lt;a href=&quot;https://www.qgis.org/&quot;&gt;https://www.qgis.org/&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -146,7 +146,7 @@
      <item row="2" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;verdana&quot;&gt;Qt 5&lt;/font&gt; 5.11.3 community&lt;br/&gt;Qt 5是一个夸平台的基于C++ 的嵌入式和桌面库，&lt;br/&gt;Qt 5使用商业版和社区版发布。&lt;br/&gt;更多关于Qt 5的信息请访问&lt;a href=&quot;https://www.qt.io/&quot;&gt;https://www.qt.io/&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;font size=&quot;6&quot; face=&quot;微软雅黑&quot;&gt;Qt 5&lt;/font&gt;&lt;font size=&quot;3&quot; face=&quot;微软雅黑&quot;&gt; 5.11.3 community&lt;br/&gt;Qt 5是一个夸平台的基于C++ 的嵌入式和桌面库，&lt;br/&gt;Qt 5使用商业版和社区版发布。&lt;br/&gt;更多关于Qt 5的信息请访问&lt;a href=&quot;https://www.qt.io/&quot;&gt;https://www.qt.io/&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>

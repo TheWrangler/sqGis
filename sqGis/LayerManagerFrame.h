@@ -7,6 +7,7 @@
 #include "ui_LayerManagerFrame.h"
 #include "MapLayerManager.h"
 #include "qgsmaplayer.h"
+#include "qgsvectorlayer.h"
 
 class LayerManagerFrame : public QFrame
 {
@@ -21,6 +22,8 @@ private:
 	MapLayerManager* _mapLayerManager;
 
 	void setLayerIcon(QStandardItem* item, QgsMapLayerType type, bool visible = true);
+	QStandardItem* getLayerViewItem(QString layerName);
+	void updateFeatureProperty(QgsFeature& feature);
 
 public:
 	QTreeView* getLayerTreeView() { return ui.mapLayerTreeView; }
@@ -33,6 +36,8 @@ public:
 	void backwardMapLayerFromView(QString layerName);
 	void deleteMapLayerFromView(QString layerName);
 
+	void updateFeatureView(QgsVectorLayer* layer);
+
 signals:
 	void layersChanged(QgsMapLayer* layer);
 
@@ -40,6 +45,8 @@ protected slots :
 	void on_upLayerBtn_clicked();
 	void on_downLayerBtn_clicked();
 	void on_visibleLayerBtn_clicked();
+
+	void on_mapLayerTreeItem_Clicked(const QModelIndex &index);
 
 public slots:
 	void on_removeLayerBtn_clicked();

@@ -26,6 +26,9 @@
     <Filter Include="LogQt5">
       <UniqueIdentifier>{887d4cda-2e7e-4833-8a7d-689e9d773d46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MarkLayer">
+      <UniqueIdentifier>{36ce6229-4220-4513-b60a-c0cb79126e3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -43,9 +46,6 @@
     <ClCompile Include="AboutDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryEditDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MapLayerManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,6 +54,18 @@
     </ClCompile>
     <ClCompile Include="LayerManagerFrame.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkLayer\PointMarkLayer.cpp">
+      <Filter>MarkLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="FeatureEditDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkLayer\MarkFeatureSettings.cpp">
+      <Filter>MarkLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkLayer\MarkLayer.cpp">
+      <Filter>MarkLayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,9 +78,6 @@
     <QtMoc Include="AboutDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="GeometryEditDlg.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="LogQt5\LogTextEdit.h">
       <Filter>LogQt5</Filter>
     </QtMoc>
@@ -76,6 +85,9 @@
       <Filter>LogQt5</Filter>
     </QtMoc>
     <QtMoc Include="LayerManagerFrame.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FeatureEditDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -94,10 +106,10 @@
     <QtUic Include="AboutDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="GeometryEditDlg.ui">
+    <QtUic Include="LayerManagerFrame.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="LayerManagerFrame.ui">
+    <QtUic Include="FeatureEditDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -113,6 +125,15 @@
     </ClInclude>
     <ClInclude Include="MapLayerManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkLayer\PointMarkLayer.h">
+      <Filter>MarkLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkLayer\MarkFeatureSettings.h">
+      <Filter>MarkLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkLayer\MarkLayer.h">
+      <Filter>MarkLayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

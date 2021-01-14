@@ -1,5 +1,8 @@
 #include "LayerManagerFrame.h"
 #include "options.h"
+#include "./MarkLayer/MarkLayer.h"
+
+#include <QTreeWidget>
 
 LayerManagerFrame::LayerManagerFrame(QWidget *parent)
 	: QFrame(parent)
@@ -12,6 +15,10 @@ LayerManagerFrame::LayerManagerFrame(QWidget *parent)
 	QStandardItemModel* model = new QStandardItemModel(ui.mapLayerTreeView);
 	model->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Í¼²ãÃû³Æ"));
 	ui.mapLayerTreeView->setModel(model);
+
+
+	connect(ui.mapLayerTreeView, SIGNAL(clicked(const QModelIndex&)),
+		this, SLOT(on_mapLayerTreeItem_Clicked(const QModelIndex&)));
 
 	_mapLayerManager = NULL;
 }
@@ -44,6 +51,44 @@ void LayerManagerFrame::setLayerIcon(QStandardItem * item, QgsMapLayerType type,
 	}
 }
 
+QStandardItem* LayerManagerFrame::getLayerViewItem(QString layerName)
+{
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	for (int i = 0; i < model->rowCount(); i++)
+	{
+		QStandardItem *item = model->item(i);
+		if (item->text() != layerName)
+			continue;
+
+		return item;
+	}
+
+	return NULL;
+}
+
+void LayerManagerFrame::updateFeatureProperty(QgsFeature& feature)
+{
+	ui.mapPropertyTreeWidget->clear();
+
+	QStringList attr = feature.fields().names();
+	QList<QString>::iterator it = attr.begin();
+	QStringList list;
+	QTreeWidgetItem* item;
+	while (it != attr.end())
+	{
+		QVariant v = feature.attribute(*it);
+
+		list.clear();
+		list.append(*it);
+		list.append(v.toString());
+
+		item = new QTreeWidgetItem(list);
+		ui.mapPropertyTreeWidget->addTopLevelItem(item);
+
+		it++;
+	}
+}
+
 void LayerManagerFrame::attachMapLayerManager(MapLayerManager* mapLayerManager)
 {
 	_mapLayerManager = mapLayerManager;
@@ -52,7 +97,7 @@ void LayerManagerFrame::attachMapLayerManager(MapLayerManager* mapLayerManager)
 void LayerManagerFrame::addMapLayerToView(QgsMapLayer* layer, bool visible)
 {
 	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	QStandardItem * item = new QStandardItem(QString(layer->name()));
+	QStandardItem * item = new QStandardItem(layer->name());
 	model->insertRow(0, item);
 
 	QgsMapLayerType type = layer->type();
@@ -63,7 +108,6 @@ void LayerManagerFrame::addMapLayerToView(QgsMapLayer* layer, bool visible)
 #endif
 
 	_mapLayerManager->addMapLayer(layer, visible);
-	emit(layersChanged(layer));
 }
 
 void LayerManagerFrame::hideMapLayerFromView(QString layerName)
@@ -176,6 +220,27 @@ void LayerManagerFrame::deleteMapLayerFromView(QString layerName)
 	}
 }
 
+void LayerManagerFrame::updateFeatureView(QgsVectorLayer* layer)
+{
+	QStandardItem* item = getLayerViewItem(layer->name());
+	int item_num = item->rowCount();
+	item->removeRows(0, item_num);
+
+	QgsVectorDataProvider* provider = layer->dataProvider();
+	QgsFeatureIterator it = provider->getFeatures(QgsFeatureRequest());
+	if (!it.isValid())
+		return;
+
+	QgsFeature feature;
+	while (it.nextFeature(feature))
+	{
+		QStandardItem* childItem = new QStandardItem(feature.attribute("name").toString());
+		item->appendRow(childItem);
+	} 
+
+	ui.mapLayerTreeView->expandAll();
+}
+
 void LayerManagerFrame::on_upLayerBtn_clicked()
 {
 	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
@@ -235,4 +300,26 @@ void LayerManagerFrame::on_visibleLayerBtn_clicked()
 
 	//TODO:
 	emit(layersChanged(NULL));
+}
+
+void LayerManagerFrame::on_mapLayerTreeItem_Clicked(const QModelIndex &index)
+{
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QStandardItem* item = model->itemFromIndex(index);
+
+	QStandardItem* parent_item = item->parent();
+	if (parent_item != NULL)
+	{
+		QgsMapLayer* layer = _mapLayerManager->getMapLayer(parent_item->text());
+		if (layer == NULL)
+			return;
+
+		MarkLayer* markLayer = (MarkLayer*)layer;
+
+		QgsFeature feature;
+		if (!markLayer->searchFeature(item->text(), feature))
+			return;
+
+		updateFeatureProperty(feature);
+	}
 }

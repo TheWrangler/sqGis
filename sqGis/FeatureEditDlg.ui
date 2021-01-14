@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GeometryEditDlg</class>
- <widget class="QDialog" name="GeometryEditDlg">
+ <class>FeatureEditDlg</class>
+ <widget class="QDialog" name="FeatureEditDlg">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>575</height>
+    <width>438</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <widget class="QTreeWidget" name="m_geoTree">
      <column>
       <property name="text">
-       <string>对象</string>
+       <string>属性</string>
       </property>
      </column>
      <column>

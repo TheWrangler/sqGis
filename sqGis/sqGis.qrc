@@ -1,6 +1,8 @@
 <RCC>
   <qresource prefix="/img">
     <file alias="unvisible_x16">Resources/unvisible_x16.png</file>
+    <file alias="osm_x16">Resources/osm_x16.png</file>
+    <file alias="osm_x24">Resources/osm_x24.png</file>
     <file alias="cancel_x16">Resources/cancel_x16.png</file>
     <file alias="cancel_x24">Resources/cancel_x24.png</file>
     <file alias="ok_x16">Resources/ok_x16.png</file>

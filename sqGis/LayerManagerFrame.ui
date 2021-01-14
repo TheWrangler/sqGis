@@ -6,29 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>261</height>
+    <width>351</width>
+    <height>449</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>LayerManagerFrame</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>2</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
@@ -163,6 +148,20 @@
    </item>
    <item>
     <widget class="QTreeView" name="mapLayerTreeView"/>
+   </item>
+   <item>
+    <widget class="QTreeWidget" name="mapPropertyTreeWidget">
+     <column>
+      <property name="text">
+       <string>属性</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>值</string>
+      </property>
+     </column>
+    </widget>
    </item>
   </layout>
  </widget>

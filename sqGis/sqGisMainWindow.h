@@ -30,7 +30,6 @@ public:
 private:
 	Ui::sqGisMainWindow ui;
 	LayerManagerFrame* _layerManagerFrame;
-	QTableView* _layerPropertyTableView;
 	LogTextEdit* _logTextEdit;
 
 	//状态栏显示标签
@@ -50,7 +49,7 @@ protected:
 	QgsMapToolZoom *_mapToolZoomOut;//缩小
 
 	//标绘工具
-	QgsMapToolEmitPoint *_mapToolPoint;//标绘点
+	QgsMapToolEmitPoint *_mapToolPointMark;//标绘点
 
 	//标绘图层计数
 	unsigned int _pointsMarkLayerNum;//点标绘层数目
@@ -63,23 +62,17 @@ protected:
 	void initMapCanvas();
 	void initMapTools();
 
-	//创建标绘层，使用Memory provider
-	void createPointsMarkLayer(QString layerName);
-	void createLinesMarkLayer(QString layerName);
-	void createPolygonMarkLayer(QString layerName);
-
 protected slots:
-	void refreshMapCanvas(QgsMapLayer* layer);
+	void refreshMapCanvas(QgsMapLayer* layer = NULL);
 	void showCursorCoor(QgsPointXY qgsPoint);
 	void addPointMark(const QgsPointXY & pt, Qt::MouseButton button);
 
-	void on_newPointsMarkLayerAction_triggered();
+	void tick_triggered();
 
 	void on_openVectorLayerAction_triggered();
 	void on_openRasterLayerAction_triggered();
 	void on_openLocalTilesLayerAction_triggered();
 	void on_openOpenStreetMapLayerAction_triggered();
-	void on_openPostGisLayerAction_triggered();
 	void on_removeLayerAction_triggered();
 
 	void on_selectAction_triggered();

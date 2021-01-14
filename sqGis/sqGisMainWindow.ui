@@ -30,16 +30,11 @@
     <property name="title">
      <string>图层</string>
     </property>
-    <addaction name="newPointsMarkLayerAction"/>
-    <addaction name="newLinesMarkLayerAction"/>
-    <addaction name="newPolygonsMarkLayerAction"/>
-    <addaction name="separator"/>
     <addaction name="openVectorLayerAction"/>
     <addaction name="openRasterLayerAction"/>
     <addaction name="separator"/>
     <addaction name="openLocalTilesLayerAction"/>
     <addaction name="openOpenStreetMapLayerAction"/>
-    <addaction name="openPostGisLayerAction"/>
     <addaction name="separator"/>
     <addaction name="removeLayerAction"/>
     <addaction name="separator"/>
@@ -80,6 +75,8 @@
      <string>工具</string>
     </property>
     <addaction name="convertCoorAction"/>
+    <addaction name="separator"/>
+    <addaction name="action_7"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
@@ -109,7 +106,7 @@
    </attribute>
    <addaction name="openVectorLayerAction"/>
    <addaction name="openRasterLayerAction"/>
-   <addaction name="openPostGisLayerAction"/>
+   <addaction name="openOpenStreetMapLayerAction"/>
    <addaction name="removeLayerAction"/>
    <addaction name="separator"/>
    <addaction name="selectAction"/>
@@ -293,6 +290,10 @@
    </property>
   </action>
   <action name="openOpenStreetMapLayerAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/osm_x24</normaloff>:/img/osm_x24</iconset>
+   </property>
    <property name="text">
     <string>打开OpenStreetMap在线地图</string>
    </property>
@@ -310,15 +311,6 @@
   <action name="action_18">
    <property name="text">
     <string>实时轨迹</string>
-   </property>
-  </action>
-  <action name="openPostGisLayerAction">
-   <property name="icon">
-    <iconset resource="sqGis.qrc">
-     <normaloff>:/img/layer-postgis_x24</normaloff>:/img/layer-postgis_x24</iconset>
-   </property>
-   <property name="text">
-    <string>连接PostGis地图数据库</string>
    </property>
   </action>
   <action name="convertCoorAction">
@@ -340,19 +332,9 @@
     <string>退出</string>
    </property>
   </action>
-  <action name="newPointsMarkLayerAction">
+  <action name="action_7">
    <property name="text">
-    <string>新建点标绘图层</string>
-   </property>
-  </action>
-  <action name="newLinesMarkLayerAction">
-   <property name="text">
-    <string>新建线标绘图层</string>
-   </property>
-  </action>
-  <action name="newPolygonsMarkLayerAction">
-   <property name="text">
-    <string>新建多边形标绘图层</string>
+    <string>导航电文接收器</string>
    </property>
   </action>
  </widget>

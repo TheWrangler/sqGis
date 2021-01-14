@@ -1,8 +1,11 @@
 #include "sqGisMainWindow.h"
 #include "ConvertCoorDlg.h"
-#include "GeometryEditDlg.h"
+#include "FeatureEditDlg.h"
 #include "options.h"
 #include "AboutDlg.h"
+#include "./MarkLayer/MarkLayer.h"
+#include "./MarkLayer/PointMarkLayer.h"
+#include "./MarkLayer/MarkFeatureSettings.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -28,7 +31,6 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	_layerManagerFrame = new LayerManagerFrame(this);
 	connect(_layerManagerFrame, SIGNAL(layersChanged(QgsMapLayer*)), this, SLOT(refreshMapCanvas(QgsMapLayer*)));
 	
-	_layerPropertyTableView = new QTableView(this);
 	_logTextEdit = new LogTextEdit(this);
 
 	initDockWidgets();
@@ -39,6 +41,11 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 
 	initMapCanvas();
 	initMapTools();
+
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(tick_triggered()));
+	timer->start(300);
 }
 
 sqGisMainWindow::~sqGisMainWindow()
@@ -54,17 +61,12 @@ void sqGisMainWindow::initDockWidgets()
 	dockWidget1->setWidget(_layerManagerFrame);
 	addDockWidget(Qt::LeftDockWidgetArea, dockWidget1);
 
-	QDockWidget* dockWidget2 = new QDockWidget(QStringLiteral("图层属性"), this);
+	QDockWidget* dockWidget2 = new QDockWidget(QStringLiteral("过程信息"), this);
 	dockWidget2->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-	dockWidget2->setWidget(_layerPropertyTableView);
+	dockWidget2->setWidget(_logTextEdit);
 	addDockWidget(Qt::LeftDockWidgetArea, dockWidget2);
 
-	QDockWidget* dockWidget3 = new QDockWidget(QStringLiteral("过程信息"), this);
-	dockWidget3->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-	dockWidget3->setWidget(_logTextEdit);
-	addDockWidget(Qt::LeftDockWidgetArea, dockWidget3);
-
-	tabifyDockWidget(dockWidget2, dockWidget3);
+	tabifyDockWidget(dockWidget2, dockWidget1);
 }
 
 void sqGisMainWindow::initStatusBar()
@@ -114,67 +116,14 @@ void sqGisMainWindow::initMapTools()
 	_mapToolZoomOut = new QgsMapToolZoom(_mapCanvas,true);
 	_mapToolZoomOut->setAction(ui.zoomOutAction);
 
-	_mapToolPoint = new QgsMapToolEmitPoint(_mapCanvas);
-	_mapToolPoint->setAction(ui.markPointAction);
+	_mapToolPointMark = new QgsMapToolEmitPoint(_mapCanvas);
+	_mapToolPointMark->setAction(ui.markPointAction);
 
 	//连接鼠标在画布上移动的信号
 	connect(_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
 
 	//连接标绘地理点的信号
-	connect(_mapToolPoint, SIGNAL(canvasClicked(const QgsPointXY &, Qt::MouseButton)),this, SLOT(addPointMark(const QgsPointXY &, Qt::MouseButton)));
-}
-
-void sqGisMainWindow::createPointsMarkLayer(QString layerName)
-{
-	QgsVectorLayer* layer = new QgsVectorLayer("Point?crs=epsg:3857&index=yes", layerName, "memory");
-	QgsVectorDataProvider* provider = layer->dataProvider();
-	if (!layer->isValid())
-	{
-		QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("初始化点标绘图层失败!\n"));
-#if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("初始化标绘图层") << layerName << QStringLiteral("失败!");
-#endif
-		return;
-	}
-
-	_pointsMarkLayerNum++;
-
-	QList<QgsField> fields;
-	QgsField("name", QVariant::String);
-	QgsField("type", QVariant::String);
-	QgsField("height", QVariant::Double);
-	provider->addAttributes(fields);
-
-	_layerManagerFrame->addMapLayerToView(layer);
-}
-
-void sqGisMainWindow::createLinesMarkLayer(QString layerName)
-{
-	QgsVectorLayer* layer = new QgsVectorLayer("Line?crs=epsg:3857&index=yes", layerName, "memory");
-	QgsVectorDataProvider* provider = layer->dataProvider();
-	if (!layer->isValid())
-	{
-		QMessageBox::critical(this, QStringLiteral("错误"), QStringLiteral("初始化线标绘图层失败!\n"));
-#if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("初始化标绘图层") << layerName << QStringLiteral("失败!");
-#endif
-		return;
-	}
-
-	_linesMarkLayerNum++;
-
-	QList<QgsField> fields;
-	QgsField("name", QVariant::String);
-	QgsField("type", QVariant::String);
-	QgsField("height", QVariant::Double);
-	provider->addAttributes(fields);
-
-	_layerManagerFrame->addMapLayerToView(layer);
-}
-
-void sqGisMainWindow::createPolygonMarkLayer(QString layerName)
-{
-
+	connect(_mapToolPointMark, SIGNAL(canvasClicked(const QgsPointXY &, Qt::MouseButton)),this, SLOT(addPointMark(const QgsPointXY &, Qt::MouseButton)));
 }
 
 void sqGisMainWindow::refreshMapCanvas(QgsMapLayer* layer)
@@ -207,39 +156,47 @@ void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 
 void sqGisMainWindow::addPointMark(const QgsPointXY & pt, Qt::MouseButton button)
 {
-	GeometryEditDlg dlg;
-	dlg.attachGeometry(NULL);
+	MarkFeatureSettings markFeatureSettings(QStringLiteral("点标绘图层"),MarkFeatureSettings::MarkType_Point);
+	QgsPoint point(pt.x(),pt.y(),0);
+	markFeatureSettings.appendMarkPoint(point);
+	markFeatureSettings.setName(QStringLiteral("点"));
+	markFeatureSettings.setAzi(0.0);
+
+	FeatureEditDlg dlg;
+	dlg.attachFeatureSettings(&markFeatureSettings);
 	if (dlg.exec() != QDialog::Accepted)
 		return;
 
-	//QgsGeometry
+	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("点标绘图层")));
+	if (layer == NULL)
+	{ 
+		layer = MarkLayer::createLayer(MarkFeatureSettings::MarkType_Point);
+		_layerManagerFrame->addMapLayerToView(layer);
+		refreshMapCanvas();
+	}
 
+	layer->appendMark(&markFeatureSettings);
+	layer->triggerRepaint();
 
+	_layerManagerFrame->updateFeatureView(layer);
 }
 
-void sqGisMainWindow::on_newPointsMarkLayerAction_triggered()
+void sqGisMainWindow::tick_triggered()
 {
-	bool isOK;
-	QString preName = QStringLiteral("点标绘图层") + QString::number(_pointsMarkLayerNum + 1, 10);
-	QString layerName;
+	static double lon = 104.0;
 
-	do
-	{
-		layerName = QInputDialog::getText(
-			this,
-			QStringLiteral("新建点标绘图层"),
-			QStringLiteral("请输入图层名"),
-			QLineEdit::Normal,
-			preName,
-			&isOK
-		);
-	} while (_mapLayerManager->isLayerExist(layerName));
-	
-
-	if (!isOK)
+	PointMarkLayer* layer = (PointMarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("点标绘图层")));
+	if (layer == NULL)
 		return;
 
-	createPointsMarkLayer(layerName);
+	QgsPointXY src(lon, 38.0);
+	QgsPointXY dst = FeatureEditDlg::convertCoor(src,false);
+	QgsPoint point(dst.x(), dst.y(), 0);
+	layer->startEditing();
+	layer->updateMark(QStringLiteral("点"), point);
+	layer->commitChanges();
+
+	lon += 0.001;
 }
 
 void sqGisMainWindow::on_openVectorLayerAction_triggered()
@@ -268,6 +225,7 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 	}
 
 	_layerManagerFrame->addMapLayerToView(layer);
+	refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openRasterLayerAction_triggered()
@@ -295,6 +253,7 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 	}
 
 	_layerManagerFrame->addMapLayerToView(layer);
+	refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
@@ -321,6 +280,7 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 	}
 
 	_layerManagerFrame->addMapLayerToView(layer);
+	refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
@@ -338,12 +298,7 @@ void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 	}
 
 	_layerManagerFrame->addMapLayerToView(layer);
-}
-
-void sqGisMainWindow::on_openPostGisLayerAction_triggered()
-{
-	//QgsDataSourceUri uri;
-	//uri.setConnection("localhost","5432",)
+	refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_removeLayerAction_triggered()
@@ -376,7 +331,7 @@ void sqGisMainWindow::on_panAction_triggered()
 
 void sqGisMainWindow::on_markPointAction_triggered()
 {
-	_mapCanvas->setMapTool(_mapToolPoint);
+	_mapCanvas->setMapTool(_mapToolPointMark);
 	_mapCanvas->setCursor(QPixmap(":/img/position_x24"));
 }
 

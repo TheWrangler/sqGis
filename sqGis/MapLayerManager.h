@@ -13,7 +13,9 @@ public:
 	typedef struct tagMapLayerItem
 	{
 		QgsMapLayer *_layer;
+		QString _caption;
 		bool _visible;
+		bool _markLayer;
 	}MapLayerItem,*PTR_MapLayerItem;
 
 protected:
