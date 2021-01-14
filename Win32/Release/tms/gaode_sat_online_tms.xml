@@ -1,0 +1,24 @@
+<GDAL_WMS>
+    <Service name="TMS">
+        <ServerUrl>https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}</ServerUrl>
+		<ImageFormat>image/png</ImageFormat>
+    </Service>
+    <DataWindow>
+        <UpperLeftX>-20037508.3427892</UpperLeftX>
+        <UpperLeftY>20037508.3427892</UpperLeftY>
+        <LowerRightX>20037508.3427892</LowerRightX>
+        <LowerRightY>-20037508.3427892</LowerRightY>
+        <TileLevel>18</TileLevel>
+		<TileCountX>1</TileCountX>
+		<TileCountY>1</TileCountY>
+        <YOrigin>default</YOrigin>
+    </DataWindow>
+    <Projection>WGS84</Projection>
+    <BlockSizeX>256</BlockSizeX>
+    <BlockSizeY>256</BlockSizeY>
+    <BandsCount>4</BandsCount>
+	<Cache />
+	<!-- <DataType>byte</DataType> -->
+	<!-- <ZeroBlockHttpCodes>204,303,400,404,500,501</ZeroBlockHttpCodes> -->
+	<!-- <ZeroBlockOnServerException>true</ZeroBlockOnServerException> -->
+</GDAL_WMS>

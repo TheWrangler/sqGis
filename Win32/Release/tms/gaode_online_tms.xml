@@ -1,0 +1,27 @@
+<GDAL_WMS>
+    <Service name="TMS">
+		<Version>1.3.0</Version>
+		<CRS>EPSG:3857</CRS>
+        <ServerUrl>http://wprd04.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x=${x}&y=${y}&z=${z}</ServerUrl>
+		<ImageFormat>image/png</ImageFormat>
+		<Transparent>TRUE</Transparent>
+    </Service>
+    <DataWindow>
+        <UpperLeftX>-20037508.3427892</UpperLeftX>
+        <UpperLeftY>20037508.3427892</UpperLeftY>
+        <LowerRightX>20037508.3427892</LowerRightX>
+        <LowerRightY>-20037508.3427892</LowerRightY>
+        <TileLevel>18</TileLevel>
+		<TileCountX>1</TileCountX>
+		<TileCountY>1</TileCountY>
+        <YOrigin>top</YOrigin>
+    </DataWindow>
+    <Projection>WGS84</Projection>
+    <BlockSizeX>256</BlockSizeX>
+    <BlockSizeY>256</BlockSizeY>
+    <BandsCount>3</BandsCount>
+	<Cache />
+	<DataType>Byte</DataType>
+	<ZeroBlockHttpCodes>204,303,400,404,500,501</ZeroBlockHttpCodes>
+	<ZeroBlockOnServerException>true</ZeroBlockOnServerException>
+</GDAL_WMS>

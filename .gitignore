@@ -1,4 +1,12 @@
 /sqGis.VC.db
-/Win32
+/Win32/Debug
+/Win32/Release/*.dll
+/Win32/Release/*.exe
+!/Win32/Release/configs
+!/Win32/Release/marks
+!/Win32/Release/qss
+!/Win32/Release/resource
+!/Win32/Release/tms
 /sqGis/Debug
 /sqGis/Release
+/sqGis/gdalwmscache
