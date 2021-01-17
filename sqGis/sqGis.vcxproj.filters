@@ -26,8 +26,11 @@
     <Filter Include="LogQt5">
       <UniqueIdentifier>{887d4cda-2e7e-4833-8a7d-689e9d773d46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MarkLayer">
+    <Filter Include="MapMark">
       <UniqueIdentifier>{36ce6229-4220-4513-b60a-c0cb79126e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapTool">
+      <UniqueIdentifier>{fc6c6d44-7d48-4632-a3c1-9bdc6803df3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,9 +41,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConvertCoorDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PointMapTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AboutDlg.cpp">
@@ -55,17 +55,41 @@
     <ClCompile Include="LayerManagerFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MarkLayer\PointMarkLayer.cpp">
-      <Filter>MarkLayer</Filter>
+    <ClCompile Include="MapMark\LineMarkLayer.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\MarkFeatureSettings.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\MarkLayer.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\PointMarkLayer.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolMarkPoint.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolMovePoint.cpp">
+      <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="FeatureEditDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MarkLayer\MarkFeatureSettings.cpp">
-      <Filter>MarkLayer</Filter>
+    <ClCompile Include="MapTool\MapToolMarkSelect.cpp">
+      <Filter>MapTool</Filter>
     </ClCompile>
-    <ClCompile Include="MarkLayer\MarkLayer.cpp">
-      <Filter>MarkLayer</Filter>
+    <ClCompile Include="MapTool\MapToolMarkLine.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolMarkPolygon.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\PolygonMarkLayer.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolMarkAbstract.cpp">
+      <Filter>MapTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +113,18 @@
     </QtMoc>
     <QtMoc Include="FeatureEditDlg.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MapTool\MapToolMarkPoint.h">
+      <Filter>MapTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapTool\MapToolMarkLine.h">
+      <Filter>MapTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapTool\MapToolMarkPolygon.h">
+      <Filter>MapTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapTool\MapToolMarkAbstract.h">
+      <Filter>MapTool</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +150,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PointMapTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -126,14 +159,26 @@
     <ClInclude Include="MapLayerManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MarkLayer\PointMarkLayer.h">
-      <Filter>MarkLayer</Filter>
+    <ClInclude Include="MapMark\LineMarkLayer.h">
+      <Filter>MapMark</Filter>
     </ClInclude>
-    <ClInclude Include="MarkLayer\MarkFeatureSettings.h">
-      <Filter>MarkLayer</Filter>
+    <ClInclude Include="MapMark\MarkFeatureSettings.h">
+      <Filter>MapMark</Filter>
     </ClInclude>
-    <ClInclude Include="MarkLayer\MarkLayer.h">
-      <Filter>MarkLayer</Filter>
+    <ClInclude Include="MapMark\MarkLayer.h">
+      <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\PointMarkLayer.h">
+      <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolMovePoint.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolMarkSelect.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\PolygonMarkLayer.h">
+      <Filter>MapMark</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

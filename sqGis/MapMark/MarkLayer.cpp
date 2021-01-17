@@ -1,26 +1,36 @@
 #include "MarkLayer.h"
 #include "PointMarkLayer.h"
+#include "LineMarkLayer.h"
+#include "PolygonMarkLayer.h"
 #include "options.h"
 
 MarkLayer::MarkLayer(QString path, QString layername)
 	: QgsVectorLayer(path, layername, "memory")
 {
+	setExtent(QgsRectangle(-20037508.3427892, -20037508.3427892, 20037508.3427892, 20037508.3427892));
 }
-
 
 MarkLayer::~MarkLayer()
 {
 }
 
-MarkLayer* MarkLayer::createLayer(MarkFeatureSettings::MarkType mark_type)
+MarkLayer* MarkLayer::createLayer(QgsWkbTypes::GeometryType mark_type)
 {
 	QString layer_name;
 	MarkLayer* layer;
 	switch (mark_type)
 	{
-	case MarkFeatureSettings::MarkType_Point:
+	case QgsWkbTypes::PointGeometry:
 		layer_name = QStringLiteral("点标绘图层");
 		layer = new PointMarkLayer(layer_name);
+		break;
+	case QgsWkbTypes::LineGeometry:
+		layer_name = QStringLiteral("线标绘图层");
+		layer = new LineMarkLayer(layer_name);
+		break;
+	case QgsWkbTypes::PolygonGeometry:
+		layer_name = QStringLiteral("多边形标绘图层");
+		layer = new PolygonMarkLayer(layer_name);
 		break;
 	}
 
@@ -51,4 +61,18 @@ bool MarkLayer::searchFeature(QString mark_name, QgsFeature& feature)
 	}
 
 	return false;
+}
+
+QgsFeatureId MarkLayer::updateMarkGeometry(QString markname, QgsPointSequence& points)
+{
+	startEditing();
+
+	return 0;
+}
+
+QgsFeatureId MarkLayer::updateMarkAttribute(QString markname, QString attribute, QVariant& value)
+{
+	startEditing();
+
+	return 0;
 }

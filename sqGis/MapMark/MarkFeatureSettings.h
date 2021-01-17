@@ -1,25 +1,18 @@
 #pragma once
 #include <QVector>
 #include <QString>
-#include "qgspoint.h"
+#include <qgspoint.h>
 
 class MarkFeatureSettings
 {
 public:
-	typedef enum tagMarkType
-	{
-		MarkType_Point,
-		MarkType_LineString,
-		MarkType_Polygon
-	}MarkType;
-
 	static QStringList MarkTypeCaption;
 
-	MarkFeatureSettings(QString layer_name,MarkType mark_type);
+	MarkFeatureSettings(QString layer_name, QgsWkbTypes::GeometryType mark_type);
 	~MarkFeatureSettings();
 
 protected:
-	MarkType _markType;
+	QgsWkbTypes::GeometryType _markType;
 
 	QString _layerName;
 
@@ -32,7 +25,7 @@ protected:
 	double _azi;
 
 public:
-	MarkType markType() { return _markType; }
+	QgsWkbTypes::GeometryType markType() { return _markType; }
 
 	void appendMarkPoint(QgsPoint& point);
 	void clearMarkPoint();

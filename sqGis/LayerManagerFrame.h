@@ -6,8 +6,8 @@
 
 #include "ui_LayerManagerFrame.h"
 #include "MapLayerManager.h"
-#include "qgsmaplayer.h"
-#include "qgsvectorlayer.h"
+#include <qgsmaplayer.h>
+#include <qgsvectorlayer.h>
 
 class LayerManagerFrame : public QFrame
 {

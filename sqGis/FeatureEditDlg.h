@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_FeatureEditDlg.h"
-#include "./MarkLayer/MarkFeatureSettings.h"
+#include "./MapMark/MarkFeatureSettings.h"
 
 class FeatureEditDlg : public QDialog
 {

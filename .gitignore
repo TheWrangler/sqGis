@@ -2,6 +2,7 @@
 /Win32/Debug
 /Win32/Release/*.dll
 /Win32/Release/*.exe
+/Win32/Release/logs
 !/Win32/Release/configs
 !/Win32/Release/marks
 !/Win32/Release/qss

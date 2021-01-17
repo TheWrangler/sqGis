@@ -3,9 +3,9 @@
 #include "FeatureEditDlg.h"
 #include "options.h"
 #include "AboutDlg.h"
-#include "./MarkLayer/MarkLayer.h"
-#include "./MarkLayer/PointMarkLayer.h"
-#include "./MarkLayer/MarkFeatureSettings.h"
+#include "./MapMark/MarkLayer.h"
+#include "./MapMark/PointMarkLayer.h"
+#include "./MapMark/MarkFeatureSettings.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -43,9 +43,9 @@ sqGisMainWindow::sqGisMainWindow(QWidget *parent)
 	initMapTools();
 
 
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(tick_triggered()));
-	timer->start(300);
+	//QTimer *timer = new QTimer(this);
+	//connect(timer, SIGNAL(timeout()), this, SLOT(tick_triggered()));
+	//timer->start(300);
 }
 
 sqGisMainWindow::~sqGisMainWindow()
@@ -107,6 +107,9 @@ void sqGisMainWindow::initMapCanvas()
 void sqGisMainWindow::initMapTools()
 {
 	//canvas tools
+	_mapToolMarkSelect = new MapToolMarkSelect(_mapCanvas);
+	_mapToolMarkSelect->setAction(ui.selectAction);
+
 	_mapToolPan = new QgsMapToolPan(_mapCanvas);
 	_mapToolPan->setAction(ui.panAction);
 
@@ -116,14 +119,25 @@ void sqGisMainWindow::initMapTools()
 	_mapToolZoomOut = new QgsMapToolZoom(_mapCanvas,true);
 	_mapToolZoomOut->setAction(ui.zoomOutAction);
 
-	_mapToolPointMark = new QgsMapToolEmitPoint(_mapCanvas);
-	_mapToolPointMark->setAction(ui.markPointAction);
+	_mapToolMarkPoint = new MapToolMarkPoint(_mapCanvas,NULL);
+	_mapToolMarkPoint->setAction(ui.markPointAction);
+
+	_mapToolMarkLine = new MapToolMarkLine(_mapCanvas,NULL);
+	_mapToolMarkLine->setAction(ui.markLineAction);
+
+	_mapToolMarkPolygon = new MapToolMarkPolygon(_mapCanvas, NULL);
+	_mapToolMarkPolygon->setAction(ui.markPolygonAction);
 
 	//连接鼠标在画布上移动的信号
 	connect(_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
 
-	//连接标绘地理点的信号
-	connect(_mapToolPointMark, SIGNAL(canvasClicked(const QgsPointXY &, Qt::MouseButton)),this, SLOT(addPointMark(const QgsPointXY &, Qt::MouseButton)));
+	//连接标绘信号
+	connect(_mapToolMarkPoint, SIGNAL(markAdded(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)),
+		this, SLOT(addLayerMark(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)));
+	connect(_mapToolMarkLine, SIGNAL(markAdded(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)), 
+		this, SLOT(addLayerMark(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)));
+	connect(_mapToolMarkPolygon, SIGNAL(markAdded(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)), 
+		this, SLOT(addLayerMark(QgsMapLayer*, QgsWkbTypes::GeometryType, const QVector<QgsPointXY>&)));
 }
 
 void sqGisMainWindow::refreshMapCanvas(QgsMapLayer* layer)
@@ -141,7 +155,7 @@ void sqGisMainWindow::refreshMapCanvas(QgsMapLayer* layer)
 
 void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 {
-#if PROMPT_DEBUG_MSG
+#if PROMPT_DEBUG_MSG & PROMPT_MOUSE_TRACK
 	qDebug() << QStringLiteral("光标坐标: ") << qgsPoint.x() << "," << qgsPoint.y();
 #endif
 
@@ -154,31 +168,39 @@ void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 	_uiCursorCoorLabel->setText(pt.toString());
 }
 
-void sqGisMainWindow::addPointMark(const QgsPointXY & pt, Qt::MouseButton button)
+void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType type, const QVector<QgsPointXY>& points)
 {
-	MarkFeatureSettings markFeatureSettings(QStringLiteral("点标绘图层"),MarkFeatureSettings::MarkType_Point);
-	QgsPoint point(pt.x(),pt.y(),0);
-	markFeatureSettings.appendMarkPoint(point);
-	markFeatureSettings.setName(QStringLiteral("点"));
+	MarkFeatureSettings markFeatureSettings(layer->name(), type);
+
+	QVector<const QgsPointXY>::iterator it = points.begin();
+	while (it != points.end())
+	{
+		QgsPoint point((*it).x(), (*it).y(), 0);
+		markFeatureSettings.appendMarkPoint(point);
+
+		it++;
+	}
+
+	markFeatureSettings.setName(QStringLiteral("未命名"));
 	markFeatureSettings.setAzi(0.0);
+
+	MarkLayer* markLayer = dynamic_cast<MarkLayer*>(layer);
+	if (markLayer == NULL)
+	{
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("转换为标绘图层") << layer->name() << QStringLiteral("失败!");
+#endif
+	}
+
+	markLayer->appendMark(markFeatureSettings);
+	markLayer->triggerRepaint();
+
+	_layerManagerFrame->updateFeatureView(markLayer);
 
 	FeatureEditDlg dlg;
 	dlg.attachFeatureSettings(&markFeatureSettings);
 	if (dlg.exec() != QDialog::Accepted)
 		return;
-
-	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("点标绘图层")));
-	if (layer == NULL)
-	{ 
-		layer = MarkLayer::createLayer(MarkFeatureSettings::MarkType_Point);
-		_layerManagerFrame->addMapLayerToView(layer);
-		refreshMapCanvas();
-	}
-
-	layer->appendMark(&markFeatureSettings);
-	layer->triggerRepaint();
-
-	_layerManagerFrame->updateFeatureView(layer);
 }
 
 void sqGisMainWindow::tick_triggered()
@@ -191,9 +213,10 @@ void sqGisMainWindow::tick_triggered()
 
 	QgsPointXY src(lon, 38.0);
 	QgsPointXY dst = FeatureEditDlg::convertCoor(src,false);
-	QgsPoint point(dst.x(), dst.y(), 0);
+	QVector<QgsPoint> points;
+	points.append(QgsPoint(dst.x(), dst.y(), 0));
 	layer->startEditing();
-	layer->updateMark(QStringLiteral("点"), point);
+	layer->updateMarkGeometry(QStringLiteral("点"), points);
 	layer->commitChanges();
 
 	lon += 0.001;
@@ -308,8 +331,7 @@ void sqGisMainWindow::on_removeLayerAction_triggered()
 
 void sqGisMainWindow::on_selectAction_triggered()
 {
-	_mapCanvas->unsetMapTool(_mapCanvas->mapTool());
-	_mapCanvas->unsetCursor();
+	_mapCanvas->setMapTool(_mapToolMarkSelect);
 }
 
 void sqGisMainWindow::on_zoomInAction_triggered()
@@ -331,18 +353,44 @@ void sqGisMainWindow::on_panAction_triggered()
 
 void sqGisMainWindow::on_markPointAction_triggered()
 {
-	_mapCanvas->setMapTool(_mapToolPointMark);
-	_mapCanvas->setCursor(QPixmap(":/img/position_x24"));
+	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("点标绘图层")));
+	if (layer == NULL)
+	{
+		layer = MarkLayer::createLayer(QgsWkbTypes::PointGeometry);
+		_layerManagerFrame->addMapLayerToView(layer);
+		refreshMapCanvas();
+	}
+
+	_mapToolMarkPoint->setDestMarkLayer(layer);
+	_mapCanvas->setMapTool(_mapToolMarkPoint);
 }
 
 void sqGisMainWindow::on_markLineAction_triggered()
 {
+	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("线标绘图层")));
+	if (layer == NULL)
+	{
+		layer = MarkLayer::createLayer(QgsWkbTypes::LineGeometry);
+		_layerManagerFrame->addMapLayerToView(layer);
+		refreshMapCanvas();
+	}
 
+	_mapToolMarkLine->setDestMarkLayer(layer);
+	_mapCanvas->setMapTool(_mapToolMarkLine);
 }
 
 void sqGisMainWindow::on_markPolygonAction_triggered()
 {
+	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("多边形标绘图层")));
+	if (layer == NULL)
+	{
+		layer = MarkLayer::createLayer(QgsWkbTypes::PolygonGeometry);
+		_layerManagerFrame->addMapLayerToView(layer);
+		refreshMapCanvas();
+	}
 
+	_mapToolMarkPolygon->setDestMarkLayer(layer);
+	_mapCanvas->setMapTool(_mapToolMarkPolygon);
 }
 
 void sqGisMainWindow::on_convertCoorAction_triggered()

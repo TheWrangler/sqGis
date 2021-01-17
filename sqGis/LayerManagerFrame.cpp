@@ -1,6 +1,6 @@
 #include "LayerManagerFrame.h"
 #include "options.h"
-#include "./MarkLayer/MarkLayer.h"
+#include "./MapMark/MarkLayer.h"
 
 #include <QTreeWidget>
 

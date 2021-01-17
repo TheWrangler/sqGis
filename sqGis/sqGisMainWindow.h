@@ -11,7 +11,10 @@
 #include "LayerManagerFrame.h"
 #include "./LogQt5/LogHandlerWrapper.h"
 #include "./LogQt5/LogTextEdit.h"
-#include "PointMapTool.h"
+#include "./MapTool/MapToolMarkSelect.h"
+#include "./MapTool/MapToolMarkPoint.h"
+#include "./MapTool/MapToolMarkLine.h"
+#include "./MapTool/MapToolMarkPolygon.h"
 
 #include <qgsmapcanvas.h>
 #include <qgsmaplayer.h>
@@ -44,12 +47,15 @@ protected:
 	MapLayerManager* _mapLayerManager;
 
 	//地图查看工具
+	MapToolMarkSelect *_mapToolMarkSelect;//选择
 	QgsMapToolPan *_mapToolPan;//拖动
 	QgsMapToolZoom *_mapToolZoomIn;//放大
 	QgsMapToolZoom *_mapToolZoomOut;//缩小
 
 	//标绘工具
-	QgsMapToolEmitPoint *_mapToolPointMark;//标绘点
+	MapToolMarkPoint *_mapToolMarkPoint;//标绘点
+	MapToolMarkLine *_mapToolMarkLine; //标绘折线
+	MapToolMarkPolygon *_mapToolMarkPolygon;//标绘多边形
 
 	//标绘图层计数
 	unsigned int _pointsMarkLayerNum;//点标绘层数目
@@ -65,7 +71,7 @@ protected:
 protected slots:
 	void refreshMapCanvas(QgsMapLayer* layer = NULL);
 	void showCursorCoor(QgsPointXY qgsPoint);
-	void addPointMark(const QgsPointXY & pt, Qt::MouseButton button);
+	void addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType type, const QVector<QgsPointXY>& points);
 
 	void tick_triggered();
 
