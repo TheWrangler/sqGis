@@ -3,6 +3,9 @@
 #include "LineMarkLayer.h"
 #include "PolygonMarkLayer.h"
 #include "options.h"
+#include "./MapStyle/MapLabelStyleFactory.h"
+
+#include <qgsvectorlayerlabeling.h>
 
 MarkLayer::MarkLayer(QString path, QString layername)
 	: QgsVectorLayer(path, layername, "memory")
@@ -42,10 +45,11 @@ MarkLayer* MarkLayer::createLayer(QgsWkbTypes::GeometryType mark_type)
 		return NULL;
 	}
 
+	layer->activeLabeling(mark_type,QString("name"));
 	return layer;
 }
 
-bool MarkLayer::searchFeature(QString mark_name, QgsFeature& feature)
+bool MarkLayer::searchFeature(QgsFeatureId id, QgsFeature& feature)
 {
 	QgsVectorDataProvider* provider = dataProvider();
 	QgsFeatureIterator it = provider->getFeatures(QgsFeatureRequest());
@@ -54,7 +58,7 @@ bool MarkLayer::searchFeature(QString mark_name, QgsFeature& feature)
 
 	while (it.nextFeature(feature))
 	{
-		if (feature.attribute("name").toString() != mark_name)
+		if (feature.id() != id)
 			continue;
 
 		return true;
@@ -63,16 +67,40 @@ bool MarkLayer::searchFeature(QString mark_name, QgsFeature& feature)
 	return false;
 }
 
-QgsFeatureId MarkLayer::updateMarkGeometry(QString markname, QgsPointSequence& points)
+void MarkLayer::activeLabeling(QgsWkbTypes::GeometryType mark_type, QString& field)
 {
-	startEditing();
+	QgsPalLayerSettings layersettings;
+	switch (mark_type)
+	{
+	case QgsWkbTypes::PointGeometry:
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("ºÚÌå"), 13, QColor("darkCyan"), QColor("cyan"));
+		layersettings.fieldName = "name";
+		layersettings.placement = QgsPalLayerSettings::AroundPoint;
+		break;
+	case QgsWkbTypes::LineGeometry:
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("ºÚÌå"), 13, QColor("darkCyan"), QColor("cyan"));
+		layersettings.fieldName = "name";
+		layersettings.placement = QgsPalLayerSettings::Curved;
+		break;
+	case QgsWkbTypes::PolygonGeometry:
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("ºÚÌå"), 13, QColor("darkCyan"));
+		layersettings.fieldName = "name";
+		layersettings.placement = QgsPalLayerSettings::AroundPoint;
+		break;
+	}
+	layersettings.fieldName = field;
 
-	return 0;
+	QgsVectorLayerSimpleLabeling* labeling = new QgsVectorLayerSimpleLabeling(layersettings);
+	setLabeling(labeling);
+	setLabelsEnabled(true);
 }
 
-QgsFeatureId MarkLayer::updateMarkAttribute(QString markname, QString attribute, QVariant& value)
+void MarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)
 {
 	startEditing();
+}
 
-	return 0;
+void MarkLayer::updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value)
+{
+	startEditing();
 }

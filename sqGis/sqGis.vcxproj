@@ -103,12 +103,14 @@
     <ClCompile Include="MapMark\MarkLayer.cpp" />
     <ClCompile Include="MapMark\PointMarkLayer.cpp" />
     <ClCompile Include="MapMark\PolygonMarkLayer.cpp" />
+    <ClCompile Include="MapStyle\MapLabelStyleFactory.cpp" />
     <ClCompile Include="MapTool\MapToolMarkAbstract.cpp" />
     <ClCompile Include="MapTool\MapToolMarkLine.cpp" />
     <ClCompile Include="MapTool\MapToolMarkPoint.cpp" />
     <ClCompile Include="MapTool\MapToolMarkPolygon.cpp" />
     <ClCompile Include="MapTool\MapToolMarkSelect.cpp" />
     <ClCompile Include="MapTool\MapToolMovePoint.cpp" />
+    <ClCompile Include="NavMsgReceiverDlg.cpp" />
     <ClCompile Include="sqGisMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +124,7 @@
     <QtUic Include="ConvertCoorDlg.ui" />
     <QtUic Include="FeatureEditDlg.ui" />
     <QtUic Include="LayerManagerFrame.ui" />
+    <QtUic Include="NavMsgReceiverDlg.ui" />
     <QtUic Include="sqGisMainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -142,8 +145,10 @@
     <QtMoc Include="MapTool\MapToolMarkPolygon.h" />
     <ClInclude Include="MapMark\PolygonMarkLayer.h" />
     <QtMoc Include="MapTool\MapToolMarkAbstract.h" />
+    <ClInclude Include="MapStyle\MapLabelStyleFactory.h" />
     <ClInclude Include="MapTool\MapToolMarkSelect.h" />
     <ClInclude Include="MapTool\MapToolMovePoint.h" />
+    <QtMoc Include="NavMsgReceiverDlg.h" />
     <ClInclude Include="options.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="AboutDlg.h" />

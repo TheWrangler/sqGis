@@ -32,6 +32,9 @@
     <Filter Include="MapTool">
       <UniqueIdentifier>{fc6c6d44-7d48-4632-a3c1-9bdc6803df3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MapStyle">
+      <UniqueIdentifier>{e8239479-1b9c-4ea6-938c-2b94d00d2355}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -91,6 +94,12 @@
     <ClCompile Include="MapTool\MapToolMarkAbstract.cpp">
       <Filter>MapTool</Filter>
     </ClCompile>
+    <ClCompile Include="MapStyle\MapLabelStyleFactory.cpp">
+      <Filter>MapStyle</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMsgReceiverDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
@@ -126,6 +135,9 @@
     <QtMoc Include="MapTool\MapToolMarkAbstract.h">
       <Filter>MapTool</Filter>
     </QtMoc>
+    <QtMoc Include="NavMsgReceiverDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="sqGis.qrc">
@@ -146,6 +158,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="FeatureEditDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="NavMsgReceiverDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -179,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="MapMark\PolygonMarkLayer.h">
       <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapStyle\MapLabelStyleFactory.h">
+      <Filter>MapStyle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

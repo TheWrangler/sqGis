@@ -71,7 +71,7 @@ void MapToolMarkLine::stopCapturing()
 	_capturing = false;
 	vertexPoints();
 	_capturedPoints.clear();
-	mCanvas->refresh();
+	//mCanvas->refresh();
 }
 
 void MapToolMarkLine::addVertex(QPoint canvasPt)

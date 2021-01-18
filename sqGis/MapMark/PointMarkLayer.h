@@ -13,7 +13,7 @@ public:
 
 public:
 	QgsFeatureId appendMark(MarkFeatureSettings& markFeatureSettings);
-	QgsFeatureId updateMarkGeometry(QString markname, QgsPointSequence& points);
-	QgsFeatureId updateMarkAttribute(QString markname, QString attribute, QVariant& value);
+	void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
+	void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };
 

@@ -40,37 +40,34 @@ QgsFeatureId PolygonMarkLayer::appendMark(MarkFeatureSettings& markFeatureSettin
 	return id;
 }
 
-QgsFeatureId PolygonMarkLayer::updateMarkGeometry(QString markname, QgsPointSequence& points)
+void PolygonMarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)
 {
 	QgsFeature feature;
-	if (!searchFeature(markname, feature))
+	if (!searchFeature(id, feature))
 	{
 #if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("²éÕÒÍ¼²ãÔªËØ") << markname << QStringLiteral("Ê§°Ü!");
+		qCritical() << QStringLiteral("²éÕÒÍ¼²ãÔªËØ") << id << QStringLiteral("Ê§°Ü!");
 #endif
-		return 0;
+		return;
 	}
 
-	MarkLayer::updateMarkGeometry(markname, points);
+	MarkLayer::updateMarkGeometry(id, points);
 
 	QgsGeometry geo;
 	geo.addPart(points, QgsWkbTypes::PolygonGeometry);
 	changeGeometry(feature.id(), geo);
-	return feature.id();
 }
 
-QgsFeatureId PolygonMarkLayer::updateMarkAttribute(QString markname, QString attribute, QVariant& value)
+void PolygonMarkLayer::updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value)
 {
 	QgsFeature feature;
-	if (!searchFeature(markname, feature))
+	if (!searchFeature(id, feature))
 	{
 #if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("²éÕÒÍ¼²ãÔªËØ") << markname << QStringLiteral("Ê§°Ü!");
+		qCritical() << QStringLiteral("²éÕÒÍ¼²ãÔªËØ") << id << QStringLiteral("Ê§°Ü!");
 #endif
-		return 0;
+		return;
 	}
 
-	MarkLayer::updateMarkAttribute(markname, attribute, value);
-
-	return feature.id();
+	MarkLayer::updateMarkAttribute(id, attribute, value);
 }

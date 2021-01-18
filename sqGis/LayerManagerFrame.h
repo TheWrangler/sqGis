@@ -23,7 +23,7 @@ private:
 
 	void setLayerIcon(QStandardItem* item, QgsMapLayerType type, bool visible = true);
 	QStandardItem* getLayerViewItem(QString layerName);
-	void updateFeatureProperty(QgsFeature& feature);
+	void updateFeaturePropertyView(QgsFeature& feature);
 
 public:
 	QTreeView* getLayerTreeView() { return ui.mapLayerTreeView; }
@@ -36,7 +36,7 @@ public:
 	void backwardMapLayerFromView(QString layerName);
 	void deleteMapLayerFromView(QString layerName);
 
-	void updateFeatureView(QgsVectorLayer* layer);
+	void updateLayerFeatureView(QgsVectorLayer* layer);
 
 signals:
 	void layersChanged(QgsMapLayer* layer);

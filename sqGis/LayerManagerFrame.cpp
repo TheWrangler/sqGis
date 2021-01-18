@@ -66,14 +66,21 @@ QStandardItem* LayerManagerFrame::getLayerViewItem(QString layerName)
 	return NULL;
 }
 
-void LayerManagerFrame::updateFeatureProperty(QgsFeature& feature)
+void LayerManagerFrame::updateFeaturePropertyView(QgsFeature& feature)
 {
 	ui.mapPropertyTreeWidget->clear();
 
-	QStringList attr = feature.fields().names();
-	QList<QString>::iterator it = attr.begin();
 	QStringList list;
 	QTreeWidgetItem* item;
+
+	list.append("ID");
+	list.append(QString::number(feature.id()));
+	item = new QTreeWidgetItem(list);
+	ui.mapPropertyTreeWidget->addTopLevelItem(item);
+
+	QStringList attr = feature.fields().names();
+	QList<QString>::iterator it = attr.begin();
+	
 	while (it != attr.end())
 	{
 		QVariant v = feature.attribute(*it);
@@ -220,7 +227,7 @@ void LayerManagerFrame::deleteMapLayerFromView(QString layerName)
 	}
 }
 
-void LayerManagerFrame::updateFeatureView(QgsVectorLayer* layer)
+void LayerManagerFrame::updateLayerFeatureView(QgsVectorLayer* layer)
 {
 	QStandardItem* item = getLayerViewItem(layer->name());
 	int item_num = item->rowCount();
@@ -235,6 +242,7 @@ void LayerManagerFrame::updateFeatureView(QgsVectorLayer* layer)
 	while (it.nextFeature(feature))
 	{
 		QStandardItem* childItem = new QStandardItem(feature.attribute("name").toString());
+		childItem->setData(feature.id());
 		item->appendRow(childItem);
 	} 
 
@@ -317,9 +325,9 @@ void LayerManagerFrame::on_mapLayerTreeItem_Clicked(const QModelIndex &index)
 		MarkLayer* markLayer = (MarkLayer*)layer;
 
 		QgsFeature feature;
-		if (!markLayer->searchFeature(item->text(), feature))
+		if (!markLayer->searchFeature(item->data().toULongLong(), feature))
 			return;
 
-		updateFeatureProperty(feature);
+		updateFeaturePropertyView(feature);
 	}
 }

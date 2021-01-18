@@ -101,7 +101,7 @@ void FeatureEditDlg::createPositionsItem()
 {
 	QStringList list;
 	list.append(QStringLiteral("坐标"));
-	list.append(QStringLiteral("(经度,纬度,高度)"));
+	list.append(QStringLiteral("(经度, 纬度, 高度)"));
 
 	QTreeWidgetItem* item = new QTreeWidgetItem(list);
 	ui.m_geoTree->addTopLevelItem(item);
@@ -123,10 +123,10 @@ void FeatureEditDlg::createPositionsItem()
 		src.setY((*it).y());
 		dst = convertCoor(src);
 
-		QString posString = QString::number(dst.x(), 10, 12)
-			+ ","
-			+ QString::number(dst.y(), 10, 12)
-			+ ","
+		QString posString = QString::number(dst.x(), 10, 10)
+			+ ", "
+			+ QString::number(dst.y(), 10, 10)
+			+ ", "
 			+ QString::number((*it).z(), 10, 2);
 	
 		list.append(posString);

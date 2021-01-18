@@ -1,5 +1,6 @@
 #include "sqGisMainWindow.h"
 #include "ConvertCoorDlg.h"
+#include "NavMsgReceiverDlg.h"
 #include "FeatureEditDlg.h"
 #include "options.h"
 #include "AboutDlg.h"
@@ -98,10 +99,6 @@ void sqGisMainWindow::initMapCanvas()
 
 	QgsPointXY center(12956100, 4845690);
 	_mapCanvas->setCenter(center);
-
-	_pointsMarkLayerNum = 0;
-	_linesMarkLayerNum = 0;
-	_polygonsMarkLayerNum = 0;
 }
 
 void sqGisMainWindow::initMapTools()
@@ -195,7 +192,7 @@ void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType
 	markLayer->appendMark(markFeatureSettings);
 	markLayer->triggerRepaint();
 
-	_layerManagerFrame->updateFeatureView(markLayer);
+	_layerManagerFrame->updateLayerFeatureView(markLayer);
 
 	FeatureEditDlg dlg;
 	dlg.attachFeatureSettings(&markFeatureSettings);
@@ -216,7 +213,7 @@ void sqGisMainWindow::tick_triggered()
 	QVector<QgsPoint> points;
 	points.append(QgsPoint(dst.x(), dst.y(), 0));
 	layer->startEditing();
-	layer->updateMarkGeometry(QStringLiteral("µã"), points);
+	//layer->updateMarkGeometry(QStringLiteral("µã"), points);
 	layer->commitChanges();
 
 	lon += 0.001;
@@ -396,6 +393,12 @@ void sqGisMainWindow::on_markPolygonAction_triggered()
 void sqGisMainWindow::on_convertCoorAction_triggered()
 {
 	ConvertCoorDlg dlg;
+	dlg.exec();
+}
+
+void sqGisMainWindow::on_navMsgReceiveAction_triggered()
+{
+	NavMsgReceiverDlg dlg;
 	dlg.exec();
 }
 

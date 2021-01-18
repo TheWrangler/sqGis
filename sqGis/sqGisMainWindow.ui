@@ -76,7 +76,7 @@
     </property>
     <addaction name="convertCoorAction"/>
     <addaction name="separator"/>
-    <addaction name="action_7"/>
+    <addaction name="navMsgReceiveAction"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
@@ -332,7 +332,7 @@
     <string>退出</string>
    </property>
   </action>
-  <action name="action_7">
+  <action name="navMsgReceiveAction">
    <property name="text">
     <string>导航电文接收器</string>
    </property>

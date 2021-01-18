@@ -57,11 +57,6 @@ protected:
 	MapToolMarkLine *_mapToolMarkLine; //标绘折线
 	MapToolMarkPolygon *_mapToolMarkPolygon;//标绘多边形
 
-	//标绘图层计数
-	unsigned int _pointsMarkLayerNum;//点标绘层数目
-	unsigned int _linesMarkLayerNum;//折现标绘层数目
-	unsigned int _polygonsMarkLayerNum;//多边形标绘层数目
-
 protected:
 	void initDockWidgets();
 	void initStatusBar();
@@ -91,6 +86,7 @@ protected slots:
 	void on_markPolygonAction_triggered();
 
 	void on_convertCoorAction_triggered();
+	void on_navMsgReceiveAction_triggered();
 
 	void on_aboutAction_triggered();
 };

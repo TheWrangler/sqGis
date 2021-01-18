@@ -12,11 +12,11 @@ public:
 
 public:
 	static MarkLayer* createLayer(QgsWkbTypes::GeometryType mark_type);
-	bool searchFeature(QString mark_name, QgsFeature& feature);
+	bool searchFeature(QgsFeatureId id, QgsFeature& feature);
 
+	virtual void activeLabeling(QgsWkbTypes::GeometryType mark_type,QString& field);
 	virtual QgsFeatureId appendMark(MarkFeatureSettings& markFeatureSettings) = 0;
-
-	virtual QgsFeatureId updateMarkGeometry(QString markname, QgsPointSequence& points);
-	virtual QgsFeatureId updateMarkAttribute(QString markname, QString attribute, QVariant& value);
+	virtual void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
+	virtual void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };
 
