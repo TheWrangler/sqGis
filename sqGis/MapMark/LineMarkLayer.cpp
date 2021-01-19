@@ -3,7 +3,7 @@
 
 
 LineMarkLayer::LineMarkLayer(QString layername)
-	:MarkLayer("linestring?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)&field=rotation:double(5,2)", layername)
+	:MarkLayer("linestring?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)&field=width:double(3,1)&field=color:string(255)&field=linestyle:string(255)", layername)
 {
 	
 }
@@ -12,33 +12,13 @@ LineMarkLayer::~LineMarkLayer()
 {
 }
 
-QgsFeatureId LineMarkLayer::appendMark(MarkFeatureSettings& markFeatureSettings)
+MarkFeature* LineMarkLayer::appendMark(const QVector<QgsPoint>& points)
 {
-	static QgsFeatureId id = 0;
-	QgsFeature feature(++id);
-	QgsVectorDataProvider* provider = dataProvider();
-
-	QgsGeometry geo;
-	geo.addPart(*(markFeatureSettings.markPoints()), QgsWkbTypes::LineGeometry);
-
-	QgsFields fields = provider->fields();
-	feature.setFields(fields, true);
-
-	feature.setGeometry(geo);
-	feature.setAttribute("name", markFeatureSettings.name());
-	feature.setAttribute("category", markFeatureSettings.category());
-	feature.setAttribute("state", markFeatureSettings.state());
-	feature.setAttribute("rotation", markFeatureSettings.rotation());
-
-	if (!provider->addFeature(feature))
-	{
-#if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("Ìí¼ÓÍ¼²ãÔªËØ") << markFeatureSettings.name() << QStringLiteral("Ê§°Ü!");
-#endif
-		return 0;
-	}
-
-	return id;
+	MarkFeature* feature = MarkFeature::createMarkFeature(QgsWkbTypes::LineGeometry);
+	addFieldsToFeature(feature);
+	feature->fromPoints(points);
+	addFeature(*feature);
+	return feature;
 }
 
 void LineMarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)

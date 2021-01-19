@@ -23,7 +23,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <QtInstall>Qt5.11.3_vs2015_32bit</QtInstall>
+    <QtInstall>qt5.11.3_msvc2015</QtInstall>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">
@@ -98,10 +98,13 @@
     <ClCompile Include="LogQt5\LogHandlerWrapper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapLayerManager.cpp" />
+    <ClCompile Include="MapMark\LineMarkFeature.cpp" />
     <ClCompile Include="MapMark\LineMarkLayer.cpp" />
-    <ClCompile Include="MapMark\MarkFeatureSettings.cpp" />
+    <ClCompile Include="MapMark\MarkFeature.cpp" />
     <ClCompile Include="MapMark\MarkLayer.cpp" />
+    <ClCompile Include="MapMark\PointMarkFeature.cpp" />
     <ClCompile Include="MapMark\PointMarkLayer.cpp" />
+    <ClCompile Include="MapMark\PolygonMarkFeature.cpp" />
     <ClCompile Include="MapMark\PolygonMarkLayer.cpp" />
     <ClCompile Include="MapStyle\MapLabelStyleFactory.cpp" />
     <ClCompile Include="MapStyle\MarkerSymbolFactory.cpp" />
@@ -137,13 +140,16 @@
     <QtMoc Include="LayerManagerFrame.h" />
     <QtMoc Include="FeatureEditDlg.h" />
     <ClInclude Include="MapLayerManager.h" />
+    <ClInclude Include="MapMark\LineMarkFeature.h" />
     <ClInclude Include="MapMark\LineMarkLayer.h" />
-    <ClInclude Include="MapMark\MarkFeatureSettings.h" />
+    <ClInclude Include="MapMark\MarkFeature.h" />
     <ClInclude Include="MapMark\MarkLayer.h" />
+    <ClInclude Include="MapMark\PointMarkFeature.h" />
     <ClInclude Include="MapMark\PointMarkLayer.h" />
     <QtMoc Include="MapTool\MapToolMarkPoint.h" />
     <QtMoc Include="MapTool\MapToolMarkLine.h" />
     <QtMoc Include="MapTool\MapToolMarkPolygon.h" />
+    <ClInclude Include="MapMark\PolygonMarkFeature.h" />
     <ClInclude Include="MapMark\PolygonMarkLayer.h" />
     <QtMoc Include="MapTool\MapToolMarkAbstract.h" />
     <ClInclude Include="MapStyle\MapLabelStyleFactory.h" />

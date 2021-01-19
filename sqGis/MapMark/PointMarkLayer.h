@@ -3,7 +3,6 @@
 #include <qgsvectordataprovider.h>
 
 #include "MarkLayer.h"
-#include "MarkFeatureSettings.h"
 
 class PointMarkLayer : public MarkLayer
 {
@@ -12,7 +11,7 @@ public:
 	~PointMarkLayer();
 
 public:
-	QgsFeatureId appendMark(MarkFeatureSettings& markFeatureSettings);
+	MarkFeature* appendMark(const QVector<QgsPoint>& points);
 	void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
 	void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };

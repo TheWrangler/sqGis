@@ -61,9 +61,6 @@
     <ClCompile Include="MapMark\LineMarkLayer.cpp">
       <Filter>MapMark</Filter>
     </ClCompile>
-    <ClCompile Include="MapMark\MarkFeatureSettings.cpp">
-      <Filter>MapMark</Filter>
-    </ClCompile>
     <ClCompile Include="MapMark\MarkLayer.cpp">
       <Filter>MapMark</Filter>
     </ClCompile>
@@ -102,6 +99,18 @@
     </ClCompile>
     <ClCompile Include="MapStyle\MarkerSymbolFactory.cpp">
       <Filter>MapStyle</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\PointMarkFeature.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\LineMarkFeature.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\MarkFeature.cpp">
+      <Filter>MapMark</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMark\PolygonMarkFeature.cpp">
+      <Filter>MapMark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,9 +189,6 @@
     <ClInclude Include="MapMark\LineMarkLayer.h">
       <Filter>MapMark</Filter>
     </ClInclude>
-    <ClInclude Include="MapMark\MarkFeatureSettings.h">
-      <Filter>MapMark</Filter>
-    </ClInclude>
     <ClInclude Include="MapMark\MarkLayer.h">
       <Filter>MapMark</Filter>
     </ClInclude>
@@ -203,6 +209,18 @@
     </ClInclude>
     <ClInclude Include="MapStyle\MarkerSymbolFactory.h">
       <Filter>MapStyle</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\PointMarkFeature.h">
+      <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\LineMarkFeature.h">
+      <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\MarkFeature.h">
+      <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMark\PolygonMarkFeature.h">
+      <Filter>MapMark</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

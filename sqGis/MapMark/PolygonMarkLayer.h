@@ -8,7 +8,7 @@ public:
 	~PolygonMarkLayer();
 
 public:
-	QgsFeatureId appendMark(MarkFeatureSettings& markFeatureSettings);
+	MarkFeature* appendMark(const QVector<QgsPoint>& points);
 	void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
 	void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };

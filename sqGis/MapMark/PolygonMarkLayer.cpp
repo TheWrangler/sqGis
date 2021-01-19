@@ -3,7 +3,7 @@
 
 
 PolygonMarkLayer::PolygonMarkLayer(QString layername)
-	:MarkLayer("polygon?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)", layername)
+	:MarkLayer("polygon?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)&field=strokecolor:string(255)&field=strokewidth:double(3,1)&field=strokestyle:string(255)&field=filledcolor:string(255)&field=filledstyle:string(255)", layername)
 {
 }
 
@@ -12,32 +12,13 @@ PolygonMarkLayer::~PolygonMarkLayer()
 {
 }
 
-QgsFeatureId PolygonMarkLayer::appendMark(MarkFeatureSettings& markFeatureSettings)
+MarkFeature* PolygonMarkLayer::appendMark(const QVector<QgsPoint>& points)
 {
-	static QgsFeatureId id = 0;
-	QgsFeature feature(++id);
-	QgsVectorDataProvider* provider = dataProvider();
-
-	QgsGeometry geo;
-	geo.addPart(*(markFeatureSettings.markPoints()), QgsWkbTypes::PolygonGeometry);
-
-	QgsFields fields = provider->fields();
-	feature.setFields(fields, true);
-
-	feature.setGeometry(geo);
-	feature.setAttribute("name", markFeatureSettings.name());
-	feature.setAttribute("category", markFeatureSettings.category());
-	feature.setAttribute("state", markFeatureSettings.state());
-
-	if (!provider->addFeature(feature))
-	{
-#if PROMPT_CRITICAL_MSG
-		qCritical() << QStringLiteral("Ìí¼ÓÍ¼²ãÔªËØ") << markFeatureSettings.name() << QStringLiteral("Ê§°Ü!");
-#endif
-		return 0;
-	}
-
-	return id;
+	MarkFeature* feature = MarkFeature::createMarkFeature(QgsWkbTypes::PolygonGeometry);
+	addFieldsToFeature(feature);
+	feature->fromPoints(points);
+	addFeature(*feature);
+	return feature;
 }
 
 void PolygonMarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)

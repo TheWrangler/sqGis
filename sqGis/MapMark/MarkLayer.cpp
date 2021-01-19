@@ -9,7 +9,6 @@
 #include <qgsvectorlayerlabeling.h>
 #include <qgsrenderer.h>
 #include <qgssinglesymbolrenderer.h>
-//#include <qgssymbol.h>
 
 MarkLayer::MarkLayer(QString path, QString layername)
 	: QgsVectorLayer(path, layername, "memory")
@@ -103,9 +102,40 @@ void MarkLayer::setLayerRenderer(QgsWkbTypes::GeometryType mark_type)
 	{
 		QgsSingleSymbolRenderer* render = dynamic_cast<QgsSingleSymbolRenderer*>(renderer());
 
-		QString svgfile = QCoreApplication::applicationDirPath() + "/markers/ground_station.svg";
+		QString svgfile = QCoreApplication::applicationDirPath() + "/markers/position.svg";
 		QgsMarkerSymbol* symbol = MarkerSymbolFactory::createSvgMarkerSymbol(svgfile);
 		render->setSymbol(symbol);
+	}
+	else if (mark_type == QgsWkbTypes::LineGeometry)
+	{
+		QgsSingleSymbolRenderer* render = dynamic_cast<QgsSingleSymbolRenderer*>(renderer());
+		QgsLineSymbol* symbol = MarkerSymbolFactory::createSimpleLineSymbol();
+		render->setSymbol(symbol);
+	}
+	else if (mark_type == QgsWkbTypes::PolygonGeometry)
+	{
+		QgsSingleSymbolRenderer* render = dynamic_cast<QgsSingleSymbolRenderer*>(renderer());
+		QgsFillSymbol* symbol = MarkerSymbolFactory::createSimpleFillSymbol();
+		render->setSymbol(symbol);
+	}
+}
+
+void MarkLayer::addFieldsToFeature(QgsFeature* feature)
+{
+	QgsVectorDataProvider* provider = dataProvider();
+	QgsFields fields = provider->fields();
+	feature->setFields(fields, true);
+}
+
+void MarkLayer::addFeature(QgsFeature& feature)
+{
+	QgsVectorDataProvider* provider = dataProvider();
+
+	if (!provider->addFeature(feature))
+	{
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("Ìí¼ÓÍ¼²ãÔªËØ") << feature.id() << QStringLiteral("Ê§°Ü!");
+#endif
 	}
 }
 

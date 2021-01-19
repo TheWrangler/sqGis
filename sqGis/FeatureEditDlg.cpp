@@ -11,7 +11,7 @@ FeatureEditDlg::FeatureEditDlg(QWidget *parent)
 	ui.m_okBtn->setIcon(QIcon(":/img/ok_x24"));
 	ui.m_cancelBtn->setIcon(QIcon(":/img/cancel_x24"));
 
-	_featureSettings = NULL;
+	_markFeature = NULL;
 }
 
 FeatureEditDlg::~FeatureEditDlg()
@@ -55,9 +55,9 @@ void FeatureEditDlg::onStateChanged(int state)
 	
 }
 
-void FeatureEditDlg::attachFeatureSettings(MarkFeatureSettings* featureSettings)
+void FeatureEditDlg::attachFeatureSettings(MarkFeature* markFeature)
 {
-	_featureSettings = featureSettings;
+	_markFeature = markFeature;
 
 	createBelongToLayerItem();
 	createTypeItem();
@@ -81,7 +81,7 @@ void FeatureEditDlg::createTypeItem()
 {
 	QStringList list;
 	list.append(QStringLiteral("ÀàÐÍ"));
-	list.append(MarkFeatureSettings::MarkTypeCaption[_featureSettings->markType()]);
+	list.append(MarkFeature::MarkTypeCaption[_markFeature->markType()]);
 	
 	QTreeWidgetItem* item = new QTreeWidgetItem(list);
 	ui.m_geoTree->addTopLevelItem(item);
@@ -91,7 +91,7 @@ void FeatureEditDlg::createNameItem()
 {
 	QStringList list;
 	list.append(QStringLiteral("Ãû³Æ"));
-	list.append(_featureSettings->name());
+	list.append(_markFeature->name());
 
 	QTreeWidgetItem* item = new QTreeWidgetItem(list);
 	ui.m_geoTree->addTopLevelItem(item);
@@ -109,7 +109,7 @@ void FeatureEditDlg::createPositionsItem()
 	QgsPointXY src;
 	QgsPointXY dst;
 
-	QVector<QgsPoint>* points = _featureSettings->markPoints();
+	/*QVector<QgsPoint>* points = _featureSettings->markPoints();
 	QVector<QgsPoint>::iterator it = points->begin();
 	unsigned int index = 0;
 	while (it != points->end())
@@ -135,5 +135,5 @@ void FeatureEditDlg::createPositionsItem()
 		item->addChild(childItem);
 
 		it++;
-	}	
+	}*/	
 }

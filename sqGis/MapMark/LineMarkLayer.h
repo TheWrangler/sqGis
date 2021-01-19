@@ -1,5 +1,6 @@
 #pragma once
 #include "MarkLayer.h"
+
 class LineMarkLayer : public MarkLayer
 {
 public:
@@ -7,7 +8,7 @@ public:
 	~LineMarkLayer();
 
 public:
-	QgsFeatureId appendMark(MarkFeatureSettings& markFeatureSettings);
+	MarkFeature* appendMark(const QVector<QgsPoint>& points);
 	void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
 	void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };

@@ -6,7 +6,7 @@
 #include "AboutDlg.h"
 #include "./MapMark/MarkLayer.h"
 #include "./MapMark/PointMarkLayer.h"
-#include "./MapMark/MarkFeatureSettings.h"
+#include "./MapMark/MarkFeature.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -167,20 +167,16 @@ void sqGisMainWindow::showCursorCoor(QgsPointXY qgsPoint)
 
 void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType type, const QVector<QgsPointXY>& points)
 {
-	MarkFeatureSettings markFeatureSettings(layer->name(), type);
-
+	QVector<QgsPoint> geoPoints;
 	QVector<const QgsPointXY>::iterator it = points.begin();
 	while (it != points.end())
 	{
 		QgsPoint point((*it).x(), (*it).y(), 0);
-		markFeatureSettings.appendMarkPoint(point);
+		geoPoints.push_back(point);
 
 		it++;
 	}
 
-	markFeatureSettings.setName(QStringLiteral("Î´ÃüÃû"));
-	markFeatureSettings.setRotation(0.0);
-	markFeatureSettings.setMarkSize(13);
 	MarkLayer* markLayer = dynamic_cast<MarkLayer*>(layer);
 	if (markLayer == NULL)
 	{
@@ -189,15 +185,20 @@ void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType
 #endif
 	}
 
-	markLayer->appendMark(markFeatureSettings);
+	MarkFeature* feature = markLayer->appendMark(geoPoints);
 	markLayer->triggerRepaint();
 
 	_layerManagerFrame->updateLayerFeatureView(markLayer);
 
 	FeatureEditDlg dlg;
-	dlg.attachFeatureSettings(&markFeatureSettings);
+	dlg.attachFeatureSettings(feature);
 	if (dlg.exec() != QDialog::Accepted)
+	{
+		delete feature;
 		return;
+	}
+
+	delete feature;
 }
 
 void sqGisMainWindow::tick_triggered()

@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include "ui_FeatureEditDlg.h"
-#include "./MapMark/MarkFeatureSettings.h"
+#include "./MapMark/MarkFeature.h"
 
 class FeatureEditDlg : public QDialog
 {
@@ -14,7 +14,7 @@ public:
 
 	static QgsPointXY convertCoor(QgsPointXY& src,bool toWSG84 = true);
 
-	void attachFeatureSettings(MarkFeatureSettings* featureSettings);
+	void attachFeatureSettings(MarkFeature* markFeature);
 
 protected:
 	void createBelongToLayerItem();
@@ -24,7 +24,7 @@ protected:
 
 private:
 	Ui::FeatureEditDlg ui;
-	MarkFeatureSettings* _featureSettings;
+	MarkFeature* _markFeature;
 
 protected slots:
 	void on_m_okBtn_clicked();
