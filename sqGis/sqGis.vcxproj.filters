@@ -100,6 +100,9 @@
     <ClCompile Include="NavMsgReceiverDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MapStyle\MarkerSymbolFactory.cpp">
+      <Filter>MapStyle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
@@ -196,6 +199,9 @@
       <Filter>MapMark</Filter>
     </ClInclude>
     <ClInclude Include="MapStyle\MapLabelStyleFactory.h">
+      <Filter>MapStyle</Filter>
+    </ClInclude>
+    <ClInclude Include="MapStyle\MarkerSymbolFactory.h">
       <Filter>MapStyle</Filter>
     </ClInclude>
   </ItemGroup>

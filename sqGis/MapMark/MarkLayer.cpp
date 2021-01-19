@@ -4,8 +4,12 @@
 #include "PolygonMarkLayer.h"
 #include "options.h"
 #include "./MapStyle/MapLabelStyleFactory.h"
+#include "./MapStyle/MarkerSymbolFactory.h"
 
 #include <qgsvectorlayerlabeling.h>
+#include <qgsrenderer.h>
+#include <qgssinglesymbolrenderer.h>
+//#include <qgssymbol.h>
 
 MarkLayer::MarkLayer(QString path, QString layername)
 	: QgsVectorLayer(path, layername, "memory")
@@ -46,6 +50,7 @@ MarkLayer* MarkLayer::createLayer(QgsWkbTypes::GeometryType mark_type)
 	}
 
 	layer->activeLabeling(mark_type,QString("name"));
+	layer->setLayerRenderer(mark_type);
 	return layer;
 }
 
@@ -73,18 +78,15 @@ void MarkLayer::activeLabeling(QgsWkbTypes::GeometryType mark_type, QString& fie
 	switch (mark_type)
 	{
 	case QgsWkbTypes::PointGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("darkCyan"), QColor("cyan"));
-		layersettings.fieldName = "name";
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"), QColor("cyan"),0.4);
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	case QgsWkbTypes::LineGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("darkCyan"), QColor("cyan"));
-		layersettings.fieldName = "name";
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"), QColor("cyan"),0.4);
 		layersettings.placement = QgsPalLayerSettings::Curved;
 		break;
 	case QgsWkbTypes::PolygonGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("darkCyan"));
-		layersettings.fieldName = "name";
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"));
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	}
@@ -93,6 +95,18 @@ void MarkLayer::activeLabeling(QgsWkbTypes::GeometryType mark_type, QString& fie
 	QgsVectorLayerSimpleLabeling* labeling = new QgsVectorLayerSimpleLabeling(layersettings);
 	setLabeling(labeling);
 	setLabelsEnabled(true);
+}
+
+void MarkLayer::setLayerRenderer(QgsWkbTypes::GeometryType mark_type)
+{
+	if(mark_type == QgsWkbTypes::PointGeometry)
+	{
+		QgsSingleSymbolRenderer* render = dynamic_cast<QgsSingleSymbolRenderer*>(renderer());
+
+		QString svgfile = QCoreApplication::applicationDirPath() + "/markers/ground_station.svg";
+		QgsMarkerSymbol* symbol = MarkerSymbolFactory::createSvgMarkerSymbol(svgfile);
+		render->setSymbol(symbol);
+	}
 }
 
 void MarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)

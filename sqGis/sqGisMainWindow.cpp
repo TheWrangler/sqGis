@@ -179,8 +179,8 @@ void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType
 	}
 
 	markFeatureSettings.setName(QStringLiteral("Î´ÃüÃû"));
-	markFeatureSettings.setAzi(0.0);
-
+	markFeatureSettings.setRotation(0.0);
+	markFeatureSettings.setMarkSize(13);
 	MarkLayer* markLayer = dynamic_cast<MarkLayer*>(layer);
 	if (markLayer == NULL)
 	{

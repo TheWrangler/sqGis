@@ -3,7 +3,7 @@
 
 
 LineMarkLayer::LineMarkLayer(QString layername)
-	:MarkLayer("linestring?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)", layername)
+	:MarkLayer("linestring?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)&field=rotation:double(5,2)", layername)
 {
 	
 }
@@ -28,6 +28,7 @@ QgsFeatureId LineMarkLayer::appendMark(MarkFeatureSettings& markFeatureSettings)
 	feature.setAttribute("name", markFeatureSettings.name());
 	feature.setAttribute("category", markFeatureSettings.category());
 	feature.setAttribute("state", markFeatureSettings.state());
+	feature.setAttribute("rotation", markFeatureSettings.rotation());
 
 	if (!provider->addFeature(feature))
 	{
