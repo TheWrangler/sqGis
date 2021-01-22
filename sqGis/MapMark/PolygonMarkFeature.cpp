@@ -6,7 +6,7 @@ PolygonMarkFeature::PolygonMarkFeature(const QString& name)
 	: MarkFeature(name, QgsWkbTypes::PolygonGeometry)
 {
 	_strokeWidth = 1;
-	_strokeColor = "green";
+	_strokeColor = "cyan";
 	_strokeStyle = "dot";
 	_filledColor = "red";
 	_filledStyle = "dense5";

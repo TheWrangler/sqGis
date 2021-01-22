@@ -77,15 +77,15 @@ void MarkLayer::activeLabeling(QgsWkbTypes::GeometryType mark_type, QString& fie
 	switch (mark_type)
 	{
 	case QgsWkbTypes::PointGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"), QColor("cyan"),0.4);
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	case QgsWkbTypes::LineGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"), QColor("cyan"),0.4);
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
 		layersettings.placement = QgsPalLayerSettings::Curved;
 		break;
 	case QgsWkbTypes::PolygonGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 12, QColor("darkCyan"));
+		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"), 0.5);
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	}

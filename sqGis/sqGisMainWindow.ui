@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>935</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menufile">
@@ -106,6 +106,7 @@
    </attribute>
    <addaction name="openVectorLayerAction"/>
    <addaction name="openRasterLayerAction"/>
+   <addaction name="openLocalTilesLayerAction"/>
    <addaction name="openOpenStreetMapLayerAction"/>
    <addaction name="removeLayerAction"/>
    <addaction name="separator"/>
@@ -285,6 +286,10 @@
    </property>
   </action>
   <action name="openLocalTilesLayerAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/tile_x24</normaloff>:/img/tile_x24</iconset>
+   </property>
    <property name="text">
     <string>打开本地瓦片地图</string>
    </property>

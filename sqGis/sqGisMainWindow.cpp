@@ -61,11 +61,13 @@ void sqGisMainWindow::initDockWidgets()
 	dockWidget1->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	dockWidget1->setWidget(_layerManagerFrame);
 	addDockWidget(Qt::LeftDockWidgetArea, dockWidget1);
+	dockWidget1->setMinimumSize(350, 600);
 
 	QDockWidget* dockWidget2 = new QDockWidget(QStringLiteral("过程信息"), this);
 	dockWidget2->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	dockWidget2->setWidget(_logTextEdit);
 	addDockWidget(Qt::LeftDockWidgetArea, dockWidget2);
+	dockWidget2->setMinimumSize(350, 600);
 
 	tabifyDockWidget(dockWidget2, dockWidget1);
 }
@@ -88,14 +90,21 @@ void sqGisMainWindow::initStatusBar()
 
 void sqGisMainWindow::initMapCanvas()
 {
-	_mapCanvas = new QgsMapCanvas();
+	//QWidget *tempWidget = new QWidget(this);
+	//this->setCentralWidget(tempWidget);
+
+	//QVBoxLayout* layout = new QVBoxLayout(this);
+	//_mapCanvas = new QgsMapCanvas(this);
+	//layout->addWidget(_mapCanvas);
+	//centralWidget()->setLayout(layout);
+	_mapCanvas = new QgsMapCanvas(this);
 	this->setCentralWidget(_mapCanvas);
 
 	_mapCanvas->setCanvasColor(QColor(255, 255, 255));
 	_mapCanvas->setVisible(true);
 	_mapCanvas->enableAntiAliasing(true);
 
-	_mapCanvas->setLayers(_mapLayerManager->getMapLayers());
+	//_mapCanvas->setLayers(_mapLayerManager->getMapLayers());
 
 	QgsPointXY center(12956100, 4845690);
 	_mapCanvas->setCenter(center);

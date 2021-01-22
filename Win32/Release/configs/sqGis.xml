@@ -3,5 +3,11 @@
 		<prefix_path>D:/OSGeo4W/apps/qgis-ltr</prefix_path>
 		<plugin_path>D:/OSGeo4W/apps/qgis-ltr/plugins</plugin_path>
 	<qgis>
-	<qss></qss>
+	<qss>
+	</qss>
+	<basemap>
+		<raster></raster>
+		<vector></vector>
+		<tile>E:/QGis/ESRI Satellite/esri_satellite_tms.xml</tile>
+	</basemap>
 </sqGis>
