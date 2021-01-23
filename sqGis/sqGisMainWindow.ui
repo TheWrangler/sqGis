@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>935</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menufile">
@@ -35,6 +35,10 @@
     <addaction name="separator"/>
     <addaction name="openLocalTilesLayerAction"/>
     <addaction name="openOpenStreetMapLayerAction"/>
+    <addaction name="separator"/>
+    <addaction name="action_14"/>
+    <addaction name="action_19"/>
+    <addaction name="action_20"/>
     <addaction name="separator"/>
     <addaction name="removeLayerAction"/>
     <addaction name="separator"/>
@@ -54,6 +58,7 @@
     <addaction name="separator"/>
     <addaction name="openLayerMgrAction"/>
     <addaction name="openLayerPropertyAction"/>
+    <addaction name="actionLogs_Message"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -63,6 +68,8 @@
     <addaction name="markLineAction"/>
     <addaction name="markPolygonAction"/>
     <addaction name="separator"/>
+    <addaction name="action_7"/>
+    <addaction name="action_8"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -75,6 +82,8 @@
      <string>工具</string>
     </property>
     <addaction name="convertCoorAction"/>
+    <addaction name="action_3"/>
+    <addaction name="action_21"/>
     <addaction name="separator"/>
     <addaction name="navMsgReceiveAction"/>
    </widget>
@@ -84,10 +93,6 @@
     </property>
     <addaction name="action_11"/>
     <addaction name="action_12"/>
-    <addaction name="separator"/>
-    <addaction name="action_13"/>
-    <addaction name="action_15"/>
-    <addaction name="separator"/>
     <addaction name="action_17"/>
    </widget>
    <addaction name="menufile"/>
@@ -220,12 +225,12 @@
   </action>
   <action name="action_11">
    <property name="text">
-    <string>空间距离测量</string>
+    <string>地表距离与角度测量</string>
    </property>
   </action>
   <action name="action_12">
    <property name="text">
-    <string>投影距离测量</string>
+    <string>空间距离与角度测量</string>
    </property>
   </action>
   <action name="action_13">
@@ -240,7 +245,7 @@
   </action>
   <action name="action_17">
    <property name="text">
-    <string>可视域分析</string>
+    <string>模拟飞行通视分析</string>
    </property>
   </action>
   <action name="aboutAction">
@@ -340,6 +345,46 @@
   <action name="navMsgReceiveAction">
    <property name="text">
     <string>导航电文接收器</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>数据导入助手</string>
+   </property>
+  </action>
+  <action name="action_7">
+   <property name="text">
+    <string>椭圆</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>矩形</string>
+   </property>
+  </action>
+  <action name="action_14">
+   <property name="text">
+    <string>上移图层</string>
+   </property>
+  </action>
+  <action name="action_19">
+   <property name="text">
+    <string>下移图层</string>
+   </property>
+  </action>
+  <action name="action_20">
+   <property name="text">
+    <string>隐藏图层</string>
+   </property>
+  </action>
+  <action name="actionLogs_Message">
+   <property name="text">
+    <string>Logs Message</string>
+   </property>
+  </action>
+  <action name="action_21">
+   <property name="text">
+    <string>数据导出助手</string>
    </property>
   </action>
  </widget>

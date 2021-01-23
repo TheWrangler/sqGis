@@ -8,7 +8,7 @@ public:
 	~LineMarkLayer();
 
 public:
-	MarkFeature* appendMark(const QVector<QgsPoint>& points);
+	MarkFeature* appendMark(const QVector<QgsPoint>& points, bool refresh = false);
 	void updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points);
 	void updateMarkAttribute(QgsFeatureId id, QString attribute, QVariant& value);
 };

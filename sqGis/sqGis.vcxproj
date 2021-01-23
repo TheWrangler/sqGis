@@ -108,6 +108,7 @@
     <ClCompile Include="MapMark\PolygonMarkLayer.cpp" />
     <ClCompile Include="MapStyle\MapLabelStyleFactory.cpp" />
     <ClCompile Include="MapStyle\MarkerSymbolFactory.cpp" />
+    <ClCompile Include="MapToolDistanceMeasure.cpp" />
     <ClCompile Include="MapTool\MapToolMarkAbstract.cpp" />
     <ClCompile Include="MapTool\MapToolMarkLine.cpp" />
     <ClCompile Include="MapTool\MapToolMarkPoint.cpp" />
@@ -154,6 +155,7 @@
     <QtMoc Include="MapTool\MapToolMarkAbstract.h" />
     <ClInclude Include="MapStyle\MapLabelStyleFactory.h" />
     <ClInclude Include="MapStyle\MarkerSymbolFactory.h" />
+    <ClInclude Include="MapToolDistanceMeasure.h" />
     <ClInclude Include="MapTool\MapToolMarkSelect.h" />
     <ClInclude Include="MapTool\MapToolMovePoint.h" />
     <QtMoc Include="NavMsgReceiverDlg.h" />

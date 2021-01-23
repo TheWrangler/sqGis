@@ -137,6 +137,45 @@ void MarkLayer::addFeature(QgsFeature& feature)
 		qCritical() << QStringLiteral("Ìí¼ÓÍ¼²ãÔªËØ") << feature.id() << QStringLiteral("Ê§°Ü!");
 #endif
 	}
+	else
+	{
+#if PROMPT_INFO_MSG
+		qInfo() << QStringLiteral("Ìí¼ÓÍ¼²ãÔªËØ") << feature.id() << ":" <<feature.attribute("name").toString();
+#endif
+	}
+}
+
+void MarkLayer::deleteFeature(QgsFeatureId id)
+{
+	QgsVectorDataProvider* provider = dataProvider();
+	if (!provider->deleteFeatures(QgsFeatureIds() << id))
+	{
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("É¾³ýÍ¼²ãÔªËØ") << id << QStringLiteral("Ê§°Ü!");
+#endif
+	}
+	else
+	{
+#if PROMPT_INFO_MSG
+		qInfo() << QStringLiteral("É¾³ýÍ¼²ãÔªËØ") << id;
+#endif
+	}
+}
+
+MarkFeature* MarkLayer::appendMark(const QVector<QgsPoint>& points, bool refresh)
+{
+	if(refresh)
+		triggerRepaint();
+
+	return NULL;
+}
+
+void MarkLayer::removeMark(QgsFeatureId id, bool refresh)
+{
+	deleteFeature(id);
+
+	if(refresh)
+		triggerRepaint();
 }
 
 void MarkLayer::updateMarkGeometry(QgsFeatureId id, QgsPointSequence& points)

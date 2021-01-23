@@ -18,25 +18,30 @@ public:
 	~LayerManagerFrame();
 
 private:
+	bool isLayerItem(QModelIndex index);
+	QgsMapLayer* isFeatureItem(QModelIndex index);
+
+protected:
 	Ui::LayerManagerFrame ui;
 	MapLayerManager* _mapLayerManager;
 
-	void setLayerIcon(QStandardItem* item, QgsMapLayerType type, bool visible = true);
+	void initLayerTreeView();
+	QStandardItem* getLayerRoleItem(MapLayerManager::MapLayerRoleType role);
+	void setLayerIcon(QStandardItem* item, QgsMapLayerType type, MapLayerManager::MapLayerRoleType role, bool visible);
 	QStandardItem* getLayerViewItem(QString layerName);
 	void updateFeaturePropertyView(QgsFeature& feature);
 
+	void showMapLayerItem(QStandardItem* item, QgsMapLayer* layer, bool visible);
+	void forwardMapLayerItem(QStandardItem* item);
+	void backwardMapLayerItem(QStandardItem* item);
+	void deleteMapLayerItem(QStandardItem* item);
+	void deleteLayerFeatureItem(QStandardItem* item, QgsMapLayer* layer);
+	
 public:
 	QTreeView* getLayerTreeView() { return ui.mapLayerTreeView; }
 	void attachMapLayerManager(MapLayerManager* mapLayerManager);
-
-	void addMapLayerToView(QgsMapLayer* layer, bool visible = true);
-	void hideMapLayerFromView(QString layerName);
-	void showMapLayerFromView(QString layerName);
-	void forwardMapLayerFromView(QString layerName);
-	void backwardMapLayerFromView(QString layerName);
-	void deleteMapLayerFromView(QString layerName);
-
-	void updateLayerFeatureView(QgsVectorLayer* layer);
+	bool addMapLayerToView(QgsMapLayer* layer, MapLayerManager::MapLayerRoleType role = MapLayerManager::MapLayerRole_BaseMap, bool visible = true);
+	void updateLayerFeatureView(QgsMapLayer* layer);
 
 signals:
 	void layersChanged(QgsMapLayer* layer);

@@ -8,18 +8,7 @@ LayerManagerFrame::LayerManagerFrame(QWidget *parent)
 	: QFrame(parent)
 {
 	ui.setupUi(this);
-
-	ui.mapLayerTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui.mapLayerTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
-
-	QStandardItemModel* model = new QStandardItemModel(ui.mapLayerTreeView);
-	model->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Í¼²ãÃû³Æ"));
-	ui.mapLayerTreeView->setModel(model);
-
-
-	connect(ui.mapLayerTreeView, SIGNAL(clicked(const QModelIndex&)),
-		this, SLOT(on_mapLayerTreeItem_Clicked(const QModelIndex&)));
-
+	initLayerTreeView();
 	_mapLayerManager = NULL;
 }
 
@@ -27,7 +16,69 @@ LayerManagerFrame::~LayerManagerFrame()
 {
 }
 
-void LayerManagerFrame::setLayerIcon(QStandardItem * item, QgsMapLayerType type, bool visible)
+void LayerManagerFrame::initLayerTreeView()
+{
+	ui.mapLayerTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.mapLayerTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+	QStandardItemModel* model = new QStandardItemModel(ui.mapLayerTreeView);
+	model->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Í¼²ãÃû³Æ"));
+	ui.mapLayerTreeView->setModel(model);
+
+	QStandardItem * item;
+	for (unsigned int i = 0; i < MapLayerManager::MapLayerRole_Sum; i++)
+	{
+		item = new QStandardItem(MapLayerManager::LayerRoleCaption[i]);
+		model->appendRow(item);
+	}
+
+	connect(ui.mapLayerTreeView, SIGNAL(clicked(const QModelIndex&)),
+		this, SLOT(on_mapLayerTreeItem_Clicked(const QModelIndex&)));
+}
+
+QStandardItem* LayerManagerFrame::getLayerRoleItem(MapLayerManager::MapLayerRoleType role)
+{
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QList<QStandardItem*> res = model->findItems(MapLayerManager::LayerRoleCaption[role]);
+	if (res.count() == 0)
+	{
+#if PROMPT_CRITICAL_MSG
+		qInfo() << QStringLiteral("ÎÞ·¨ÕÒµ½Í¼²ã·ÖÀà") << MapLayerManager::LayerRoleCaption[role];
+#endif
+		return NULL;
+	}
+
+	return res.at(0);
+}
+
+bool LayerManagerFrame::isLayerItem(QModelIndex index)
+{
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QModelIndex parent = model->parent(index);
+
+	QStandardItem* item = model->itemFromIndex(parent);
+	if (item == NULL)
+		return false;
+
+	if (!MapLayerManager::LayerRoleCaption.contains(item->text()))
+		return false;
+
+	return true;
+}
+
+QgsMapLayer* LayerManagerFrame::isFeatureItem(QModelIndex index)
+{
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QModelIndex parent = model->parent(index);
+
+	QStandardItem* item = model->itemFromIndex(parent);
+	if (item == NULL)
+		return NULL;
+
+	return  _mapLayerManager->getMapLayer(item->text());
+}
+
+void LayerManagerFrame::setLayerIcon(QStandardItem * item, QgsMapLayerType type, MapLayerManager::MapLayerRoleType role, bool visible)
 {
 	if (!visible)
 		item->setIcon(QIcon(":/img/unvisible_x16"));
@@ -53,10 +104,13 @@ void LayerManagerFrame::setLayerIcon(QStandardItem * item, QgsMapLayerType type,
 
 QStandardItem* LayerManagerFrame::getLayerViewItem(QString layerName)
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
+	MapLayerManager::MapLayerRoleType role = _mapLayerManager->getMapLayerRole(layerName);
+	QStandardItem* parent = getLayerRoleItem(role);
+	unsigned int count = parent->rowCount();
+
+	for (int i = 0; i < count; i++)
 	{
-		QStandardItem *item = model->item(i);
+		QStandardItem *item = parent->child(i);
 		if (item->text() != layerName)
 			continue;
 
@@ -101,139 +155,139 @@ void LayerManagerFrame::attachMapLayerManager(MapLayerManager* mapLayerManager)
 	_mapLayerManager = mapLayerManager;
 }
 
-void LayerManagerFrame::addMapLayerToView(QgsMapLayer* layer, bool visible)
+bool LayerManagerFrame::addMapLayerToView(QgsMapLayer* layer, MapLayerManager::MapLayerRoleType role, bool visible)
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	if (_mapLayerManager->isLayerExist(layer->name()))
+	{
+#if PROMPT_INFO_MSG
+		qInfo() << QStringLiteral("ÎÞ·¨Ìí¼ÓÖØÃûÍ¼²ã") << layer->name();
+#endif
+		return false;
+	}
+		
+	QStandardItem* parent = getLayerRoleItem(role);
+
 	QStandardItem * item = new QStandardItem(layer->name());
-	model->insertRow(0, item);
+	parent->insertRow(0, item);
 
 	QgsMapLayerType type = layer->type();
-	setLayerIcon(item,type,visible);
+	setLayerIcon(item, type, role, visible);
 
 #if PROMPT_INFO_MSG
 	qInfo() << QStringLiteral("Ìí¼ÓÍ¼²ã") << layer->name();
 #endif
 
-	_mapLayerManager->addMapLayer(layer, visible);
+	_mapLayerManager->addMapLayer(layer, role, visible);
+	return true;
 }
 
-void LayerManagerFrame::hideMapLayerFromView(QString layerName)
+void LayerManagerFrame::showMapLayerItem(QStandardItem* item, QgsMapLayer* layer,bool visible)
 {
+	MapLayerManager::MapLayerRoleType role = _mapLayerManager->getMapLayerRole(layer->name());
+	QgsMapLayerType type = layer->type();
+
+	if (item != NULL)
+		setLayerIcon(item, type, role, visible);
+
+	if(!visible)
+		_mapLayerManager->hideMapLayer(layer->name());
+	else _mapLayerManager->showMapLayer(layer->name());
+}
+
+void LayerManagerFrame::forwardMapLayerItem(QStandardItem* item)
+{
+	unsigned int row = item->row();
+	QStandardItem* parent = item->parent();
+	if (row == 0)
+		return;
+
+	QStandardItem* new_item = new QStandardItem(item->text());
+	parent->removeRow(item->row());
+	parent->insertRow(row - 1, new_item);
+
+	QgsMapLayer* layer = _mapLayerManager->getMapLayer(new_item->text());
+	QgsMapLayerType type = layer->type();
+	MapLayerManager::MapLayerRoleType role = _mapLayerManager->getMapLayerRole(new_item->text());
+	setLayerIcon(new_item, type, role, true);
+
+	_mapLayerManager->backwardMapLayer(new_item->text());
+
 	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
+	QModelIndex index = model->index(row - 1, 0, parent->index());
+	ui.mapLayerTreeView->setCurrentIndex(index);
+
+	if (role == MapLayerManager::MapLayerRole_Mark
+		|| role == MapLayerManager::MapLayerRole_Measure)
+		updateLayerFeatureView(layer);
+}
+
+void LayerManagerFrame::backwardMapLayerItem(QStandardItem* item)
+{
+	unsigned int row = item->row();
+	QStandardItem* parent = item->parent();
+	if (row >= parent->rowCount()-1)
+		return;
+
+	QStandardItem* new_item = new QStandardItem(item->text());
+	parent->removeRow(item->row());
+	parent->insertRow(row + 1, new_item);
+
+	QgsMapLayer* layer = _mapLayerManager->getMapLayer(new_item->text());
+	QgsMapLayerType type = layer->type();
+	MapLayerManager::MapLayerRoleType role = _mapLayerManager->getMapLayerRole(new_item->text());
+	setLayerIcon(new_item, type, role, true);
+
+	_mapLayerManager->backwardMapLayer(new_item->text());
+
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QModelIndex index = model->index(row + 1, 0, parent->index());
+	ui.mapLayerTreeView->setCurrentIndex(index);
+
+	if(role == MapLayerManager::MapLayerRole_Mark 
+		|| role == MapLayerManager::MapLayerRole_Measure)
+		updateLayerFeatureView(layer);
+}
+
+void LayerManagerFrame::deleteMapLayerItem(QStandardItem* item)
+{
+	_mapLayerManager->deleteMapLayer(item->text());
+
+	QStandardItem* parent = item->parent();
+	parent->removeRow(item->row());
+}
+
+void LayerManagerFrame::deleteLayerFeatureItem(QStandardItem* item, QgsMapLayer* layer)
+{
+	MarkLayer* markLayer = dynamic_cast<MarkLayer*>(layer);
+	if (markLayer == NULL)
 	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		QgsMapLayer *layer = _mapLayerManager->getMapLayer(layerName);
-		QgsMapLayerType type = layer->type();
-		setLayerIcon(item, type, false);
-
-		_mapLayerManager->hideMapLayer(layerName);
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("×ª»»Îª±ê»æÍ¼²ã:") << layer->name() << QStringLiteral("Ê§°Ü");
+#endif
 		return;
 	}
+	QgsFeatureId id = item->data().toULongLong();
+	markLayer->removeMark(id,true);
+
+	QStandardItem* parent = item->parent();
+	parent->removeRow(item->row());
 }
 
-void LayerManagerFrame::showMapLayerFromView(QString layerName)
+void LayerManagerFrame::updateLayerFeatureView(QgsMapLayer* layer)
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
+	QgsVectorLayer* vectlayer = dynamic_cast<QgsVectorLayer*>(layer);
+	if (vectlayer == NULL)
 	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		QgsMapLayer *layer = _mapLayerManager->getMapLayer(layerName);
-		QgsMapLayerType type = layer->type();
-		setLayerIcon(item, type, true);
-
-		_mapLayerManager->showMapLayer(layerName);
-		return;
+#if PROMPT_CRITICAL_MSG
+		qCritical() << QStringLiteral("×ª»»ÎªÊ¸Á¿Í¼²ã") << layer->name() << QStringLiteral("Ê§°Ü");
+#endif
 	}
-}
 
-void LayerManagerFrame::forwardMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		if (i == 0)
-			return;
-
-		model->removeRow(i);
-
-		item = new QStandardItem(layerName);
-		model->insertRow(i - 1, item);
-
-		QgsMapLayer *layer = _mapLayerManager->getMapLayer(layerName);
-		QgsMapLayerType type = layer->type();
-		setLayerIcon(item, type, true);
-
-		_mapLayerManager->forwardMapLayer(layerName);
-
-		QModelIndex index = model->index(i - 1, 0);
-		ui.mapLayerTreeView->setCurrentIndex(index);
-		return;
-	}
-}
-
-void LayerManagerFrame::backwardMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		if (i == model->rowCount() - 1)
-			return;
-
-		model->removeRow(i);
-
-		item = new QStandardItem(layerName);
-		model->insertRow(i + 1, item);
-
-		QgsMapLayer *layer = _mapLayerManager->getMapLayer(layerName);
-		QgsMapLayerType type = layer->type();
-		setLayerIcon(item, type, true);
-
-		_mapLayerManager->backwardMapLayer(layerName);
-
-		QModelIndex index = model->index(i + 1, 0);
-		ui.mapLayerTreeView->setCurrentIndex(index);
-		return;
-	}
-}
-
-void LayerManagerFrame::deleteMapLayerFromView(QString layerName)
-{
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	for (int i = 0; i < model->rowCount(); i++)
-	{
-		QStandardItem *item = model->item(i);
-		if (item->text() != layerName)
-			continue;
-
-		model->removeRow(i);
-
-		_mapLayerManager->deleteMapLayer(layerName);
-		return;
-	}
-}
-
-void LayerManagerFrame::updateLayerFeatureView(QgsVectorLayer* layer)
-{
-	QStandardItem* item = getLayerViewItem(layer->name());
+	QStandardItem* item = getLayerViewItem(vectlayer->name());
 	int item_num = item->rowCount();
 	item->removeRows(0, item_num);
 
-	QgsVectorDataProvider* provider = layer->dataProvider();
+	QgsVectorDataProvider* provider = vectlayer->dataProvider();
 	QgsFeatureIterator it = provider->getFeatures(QgsFeatureRequest());
 	if (!it.isValid())
 		return;
@@ -251,83 +305,101 @@ void LayerManagerFrame::updateLayerFeatureView(QgsVectorLayer* layer)
 
 void LayerManagerFrame::on_upLayerBtn_clicked()
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	int row = ui.mapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
+	if (!isLayerItem(ui.mapLayerTreeView->currentIndex()))
+		return;
 
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
 #if PROMPT_DEBUG_MSG
-	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << layerName;
+	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << item->text();
 #endif
 
-	forwardMapLayerFromView(layerName);
+	forwardMapLayerItem(item);
 	emit(layersChanged(NULL));
 }
 
 void LayerManagerFrame::on_downLayerBtn_clicked()
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	int row = ui.mapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
+	if (!isLayerItem(ui.mapLayerTreeView->currentIndex()))
+		return;
 
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
 #if PROMPT_DEBUG_MSG
-	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << layerName;
+	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << item->text();
 #endif
 
-	backwardMapLayerFromView(layerName);
+	backwardMapLayerItem(item);
 	emit(layersChanged(NULL));
 }
 
 void LayerManagerFrame::on_removeLayerBtn_clicked()
 {
 	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	int row = ui.mapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
-
+	if (isLayerItem(ui.mapLayerTreeView->currentIndex()))
+	{
+		QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
 #if PROMPT_DEBUG_MSG
-	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << layerName;
+		qDebug() << QStringLiteral("Ñ¡ÔñÉ¾³ýÍ¼²ã:") << item->text();
 #endif
 
-	deleteMapLayerFromView(layerName);
-	emit(layersChanged(NULL));
+		deleteMapLayerItem(item);
+		emit(layersChanged(NULL));
+	}
+	else
+	{
+		QgsMapLayer* layer = isFeatureItem(ui.mapLayerTreeView->currentIndex());
+		if (layer == NULL)
+			return;
+
+		QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
+#if PROMPT_DEBUG_MSG
+		qDebug() << QStringLiteral("Ñ¡ÔñÉ¾³ýÍ¼²ãÔªËØ:") << item->text();
+#endif
+		deleteLayerFeatureItem(item, layer);
+	}
 }
 
 void LayerManagerFrame::on_visibleLayerBtn_clicked()
 {
-	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	int row = ui.mapLayerTreeView->currentIndex().row();
-	QModelIndex index = model->index(row, 0);
-	QString layerName = model->data(index).toString();
+	if (!isLayerItem(ui.mapLayerTreeView->currentIndex()))
+		return;
 
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
+	QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
 #if PROMPT_DEBUG_MSG
-	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << layerName;
+	qDebug() << QStringLiteral("Ñ¡ÔñÍ¼²ã:") << item->text();
 #endif
 
+	QgsMapLayer* layer = _mapLayerManager->getMapLayer(item->text());
+	if(_mapLayerManager->isLayerVisible(item->text()))
+		showMapLayerItem(item, layer, false);
+	else showMapLayerItem(item, layer, true);
 
-	//TODO:
 	emit(layersChanged(NULL));
 }
 
 void LayerManagerFrame::on_mapLayerTreeItem_Clicked(const QModelIndex &index)
 {
 	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(ui.mapLayerTreeView->model());
-	QStandardItem* item = model->itemFromIndex(index);
 
-	QStandardItem* parent_item = item->parent();
-	if (parent_item != NULL)
+	QgsMapLayer* layer = isFeatureItem(ui.mapLayerTreeView->currentIndex());
+	if (layer == NULL)
+		return;
+
+	MarkLayer* markLayer = dynamic_cast<MarkLayer*>(layer);
+	if (markLayer == NULL)
 	{
-		QgsMapLayer* layer = _mapLayerManager->getMapLayer(parent_item->text());
-		if (layer == NULL)
-			return;
-
-		MarkLayer* markLayer = (MarkLayer*)layer;
-
-		QgsFeature feature;
-		if (!markLayer->searchFeature(item->data().toULongLong(), feature))
-			return;
-
-		updateFeaturePropertyView(feature);
+#if PROMPT_DEBUG_MSG
+		qDebug() << QStringLiteral("×ª»»Îª±ê»æÍ¼²ã:") << layer->name() << QStringLiteral("Ê§°Ü");
+#endif
+		return;
 	}
+
+	QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
+	QgsFeature feature;
+	if (!markLayer->searchFeature(item->data().toULongLong(), feature))
+		return;
+
+	updateFeaturePropertyView(feature);
 }

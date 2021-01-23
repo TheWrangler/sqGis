@@ -112,6 +112,9 @@
     <ClCompile Include="MapMark\PolygonMarkFeature.cpp">
       <Filter>MapMark</Filter>
     </ClCompile>
+    <ClCompile Include="MapToolDistanceMeasure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="sqGisMainWindow.h">
@@ -221,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="MapMark\PolygonMarkFeature.h">
       <Filter>MapMark</Filter>
+    </ClInclude>
+    <ClInclude Include="MapToolDistanceMeasure.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,12 +12,15 @@ PolygonMarkLayer::~PolygonMarkLayer()
 {
 }
 
-MarkFeature* PolygonMarkLayer::appendMark(const QVector<QgsPoint>& points)
+MarkFeature* PolygonMarkLayer::appendMark(const QVector<QgsPoint>& points, bool refresh)
 {
 	MarkFeature* feature = MarkFeature::createMarkFeature(QgsWkbTypes::PolygonGeometry);
 	addFieldsToFeature(feature);
 	feature->fromPoints(points);
 	addFeature(*feature);
+
+	MarkLayer::appendMark(points, refresh);
+
 	return feature;
 }
 

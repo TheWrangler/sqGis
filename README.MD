@@ -2,6 +2,8 @@
 
 ![1](https://github.com/TheWrangler/sqGis/blob/master/png/screenshot1.png)
 
+![2](https://github.com/TheWrangler/sqGis/blob/master/png/screenshot2.png)
+
 ### 关于QGis3的开发，参阅该项目的WIKI:
 
 https://github.com/TheWrangler/sqGis/wiki

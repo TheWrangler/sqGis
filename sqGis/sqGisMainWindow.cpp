@@ -194,8 +194,7 @@ void sqGisMainWindow::addLayerMark(QgsMapLayer* layer, QgsWkbTypes::GeometryType
 #endif
 	}
 
-	MarkFeature* feature = markLayer->appendMark(geoPoints);
-	markLayer->triggerRepaint();
+	MarkFeature* feature = markLayer->appendMark(geoPoints,true);
 
 	_layerManagerFrame->updateLayerFeatureView(markLayer);
 
@@ -254,8 +253,8 @@ void sqGisMainWindow::on_openVectorLayerAction_triggered()
 		return;
 	}
 
-	_layerManagerFrame->addMapLayerToView(layer);
-	refreshMapCanvas(layer);
+	if(_layerManagerFrame->addMapLayerToView(layer))
+		refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openRasterLayerAction_triggered()
@@ -282,8 +281,8 @@ void sqGisMainWindow::on_openRasterLayerAction_triggered()
 		return;
 	}
 
-	_layerManagerFrame->addMapLayerToView(layer);
-	refreshMapCanvas(layer);
+	if(_layerManagerFrame->addMapLayerToView(layer))
+		refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
@@ -309,8 +308,8 @@ void sqGisMainWindow::on_openLocalTilesLayerAction_triggered()
 		return;
 	}
 
-	_layerManagerFrame->addMapLayerToView(layer);
-	refreshMapCanvas(layer);
+	if(_layerManagerFrame->addMapLayerToView(layer))
+		refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
@@ -327,8 +326,8 @@ void sqGisMainWindow::on_openOpenStreetMapLayerAction_triggered()
 		return;
 	}
 
-	_layerManagerFrame->addMapLayerToView(layer);
-	refreshMapCanvas(layer);
+	if(_layerManagerFrame->addMapLayerToView(layer))
+		refreshMapCanvas(layer);
 }
 
 void sqGisMainWindow::on_removeLayerAction_triggered()
@@ -364,7 +363,7 @@ void sqGisMainWindow::on_markPointAction_triggered()
 	if (layer == NULL)
 	{
 		layer = MarkLayer::createLayer(QgsWkbTypes::PointGeometry);
-		_layerManagerFrame->addMapLayerToView(layer);
+		_layerManagerFrame->addMapLayerToView(layer, MapLayerManager::MapLayerRole_Mark);
 		refreshMapCanvas();
 	}
 
@@ -378,7 +377,7 @@ void sqGisMainWindow::on_markLineAction_triggered()
 	if (layer == NULL)
 	{
 		layer = MarkLayer::createLayer(QgsWkbTypes::LineGeometry);
-		_layerManagerFrame->addMapLayerToView(layer);
+		_layerManagerFrame->addMapLayerToView(layer,MapLayerManager::MapLayerRole_Mark);
 		refreshMapCanvas();
 	}
 
@@ -392,7 +391,7 @@ void sqGisMainWindow::on_markPolygonAction_triggered()
 	if (layer == NULL)
 	{
 		layer = MarkLayer::createLayer(QgsWkbTypes::PolygonGeometry);
-		_layerManagerFrame->addMapLayerToView(layer);
+		_layerManagerFrame->addMapLayerToView(layer, MapLayerManager::MapLayerRole_Mark);
 		refreshMapCanvas();
 	}
 
