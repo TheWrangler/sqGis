@@ -4,9 +4,9 @@
 #include "FeatureEditDlg.h"
 #include "options.h"
 #include "AboutDlg.h"
-#include "./MapMark/MarkLayer.h"
-#include "./MapMark/PointMarkLayer.h"
-#include "./MapMark/MarkFeature.h"
+#include "./MapMarkLayer/MarkLayer.h"
+#include "./MapMarkLayer/PointMarkLayer.h"
+#include "./MapLayerFeature/MarkFeature.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -133,6 +133,9 @@ void sqGisMainWindow::initMapTools()
 
 	_mapToolMarkPolygon = new MapToolMarkPolygon(_mapCanvas, NULL);
 	_mapToolMarkPolygon->setAction(ui.markPolygonAction);
+
+	_mapToolDistanceMeasure = new MapToolDistanceMeasure(_mapCanvas, NULL);
+	_mapToolDistanceMeasure->setAction(ui.distanceAngleMeasureAction);
 
 	//连接鼠标在画布上移动的信号
 	connect(_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
@@ -397,6 +400,20 @@ void sqGisMainWindow::on_markPolygonAction_triggered()
 
 	_mapToolMarkPolygon->setDestMarkLayer(layer);
 	_mapCanvas->setMapTool(_mapToolMarkPolygon);
+}
+
+void sqGisMainWindow::on_distanceAngleMeasureAction_triggered()
+{
+	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("线标绘图层")));
+	if (layer == NULL)
+	{
+		layer = MarkLayer::createLayer(QgsWkbTypes::LineGeometry);
+		_layerManagerFrame->addMapLayerToView(layer, MapLayerManager::MapLayerRole_Mark);
+		refreshMapCanvas();
+	}
+
+	_mapToolDistanceMeasure->setDestMarkLayer(layer);
+	_mapCanvas->setMapTool(_mapToolDistanceMeasure);
 }
 
 void sqGisMainWindow::on_convertCoorAction_triggered()

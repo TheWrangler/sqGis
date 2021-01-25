@@ -71,7 +71,6 @@ void MapToolMarkLine::stopCapturing()
 	_capturing = false;
 	vertexPoints();
 	_capturedPoints.clear();
-	//mCanvas->refresh();
 }
 
 void MapToolMarkLine::addVertex(QPoint canvasPt)
@@ -80,9 +79,9 @@ void MapToolMarkLine::addVertex(QPoint canvasPt)
 	QgsPointXY mapPt;
 
 	transformCoordinates(canvasPt,layerPt,mapPt);
-	_rubberBand->addPoint(mapPt);
 	_capturedPoints.append(layerPt);
-
+	
+	_rubberBand->addPoint(mapPt);
 	_tempRubberBand->reset(QgsWkbTypes::LineGeometry);
 	_tempRubberBand->addPoint(mapPt);
 }
@@ -138,15 +137,15 @@ void MapToolMarkLine::canvasReleaseEvent(QgsMapMouseEvent *e)
 
 void MapToolMarkLine::canvasMoveEvent(QgsMapMouseEvent *e)
 {
-	if (_tempRubberBand != NULL && _capturing)
-	{
-		QgsPointXY layerPt;
-		QgsPointXY mapPt;
+	if (_tempRubberBand == NULL || !_capturing)
+		return;
 
-		transformCoordinates(e->pos(), layerPt, mapPt);
+	QgsPointXY layerPt;
+	QgsPointXY mapPt;
 
-		_tempRubberBand->movePoint(mapPt);
-	}
+	transformCoordinates(e->pos(), layerPt, mapPt);
+
+	_tempRubberBand->movePoint(mapPt);
 }
 
 void MapToolMarkLine::keyPressEvent(QKeyEvent *e)

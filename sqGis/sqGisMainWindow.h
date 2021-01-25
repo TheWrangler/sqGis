@@ -15,6 +15,7 @@
 #include "./MapTool/MapToolMarkPoint.h"
 #include "./MapTool/MapToolMarkLine.h"
 #include "./MapTool/MapToolMarkPolygon.h"
+#include "./MapTool/MapToolDistanceMeasure.h"
 
 #include <qgsmapcanvas.h>
 #include <qgsmaplayer.h>
@@ -57,6 +58,9 @@ protected:
 	MapToolMarkLine *_mapToolMarkLine; //标绘折线
 	MapToolMarkPolygon *_mapToolMarkPolygon;//标绘多边形
 
+	//测量工具
+	MapToolDistanceMeasure *_mapToolDistanceMeasure;//距离测量工具
+
 protected:
 	void initDockWidgets();
 	void initStatusBar();
@@ -84,6 +88,8 @@ protected slots:
 	void on_markPointAction_triggered();
 	void on_markLineAction_triggered();
 	void on_markPolygonAction_triggered();
+
+	void on_distanceAngleMeasureAction_triggered();
 
 	void on_convertCoorAction_triggered();
 	void on_navMsgReceiveAction_triggered();

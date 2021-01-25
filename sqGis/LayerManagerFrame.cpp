@@ -1,6 +1,6 @@
 #include "LayerManagerFrame.h"
 #include "options.h"
-#include "./MapMark/MarkLayer.h"
+#include "./MapMarkLayer/MarkLayer.h"
 
 #include <QTreeWidget>
 
@@ -397,9 +397,12 @@ void LayerManagerFrame::on_mapLayerTreeItem_Clicked(const QModelIndex &index)
 	}
 
 	QStandardItem* item = model->itemFromIndex(ui.mapLayerTreeView->currentIndex());
+	QgsFeatureId id = item->data().toULongLong();
 	QgsFeature feature;
-	if (!markLayer->searchFeature(item->data().toULongLong(), feature))
+	if (!markLayer->searchFeature(id, feature))
 		return;
+
+	markLayer->selectFeature(id);
 
 	updateFeaturePropertyView(feature);
 }

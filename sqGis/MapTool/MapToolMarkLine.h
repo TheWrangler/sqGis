@@ -18,12 +18,13 @@ protected:
 	QgsRubberBand* _tempRubberBand;
 
 protected:
+	void transformCoordinates(QPoint& canvasPt, QgsPointXY& layerPt, QgsPointXY& mapPt);
+
 	virtual void notify();
 	virtual void vertexPoints();
 
-	void transformCoordinates(QPoint& canvasPt, QgsPointXY& layerPt, QgsPointXY& mapPt);
-	void startCapturing();
-	void stopCapturing();
+	virtual void startCapturing();
+	virtual void stopCapturing();
 
 	virtual void initRubberBand();
 	virtual void addVertex(QPoint canvasPt);

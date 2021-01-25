@@ -86,19 +86,27 @@
     <addaction name="action_21"/>
     <addaction name="separator"/>
     <addaction name="navMsgReceiveAction"/>
+    <addaction name="actionTT_C"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
-     <string>测量分析</string>
+     <string>测量</string>
     </property>
-    <addaction name="action_11"/>
-    <addaction name="action_12"/>
-    <addaction name="action_17"/>
+    <addaction name="distanceAngleMeasureAction"/>
+    <addaction name="areaMeasureAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_7">
+    <property name="title">
+     <string>无线通信应用</string>
+    </property>
+    <addaction name="action_23"/>
+    <addaction name="action_24"/>
    </widget>
    <addaction name="menufile"/>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_5"/>
+   <addaction name="menu_7"/>
    <addaction name="menu_4"/>
    <addaction name="menu_3"/>
   </widget>
@@ -223,14 +231,14 @@
     <string>轨迹导出</string>
    </property>
   </action>
-  <action name="action_11">
+  <action name="distanceAngleMeasureAction">
    <property name="text">
-    <string>地表距离与角度测量</string>
+    <string>距离与角度</string>
    </property>
   </action>
-  <action name="action_12">
+  <action name="areaMeasureAction">
    <property name="text">
-    <string>空间距离与角度测量</string>
+    <string>面积</string>
    </property>
   </action>
   <action name="action_13">
@@ -385,6 +393,21 @@
   <action name="action_21">
    <property name="text">
     <string>数据导出助手</string>
+   </property>
+  </action>
+  <action name="action_23">
+   <property name="text">
+    <string>飞行航线通视分析</string>
+   </property>
+  </action>
+  <action name="action_24">
+   <property name="text">
+    <string>天线数引跟踪器</string>
+   </property>
+  </action>
+  <action name="actionTT_C">
+   <property name="text">
+    <string>TT&amp;C接收器</string>
    </property>
   </action>
  </widget>

@@ -1,11 +1,11 @@
 #pragma once
 #include <qgspallabeling.h>
 
-class MapLabelStyleFactory
+class MakerLabelStyleFactory
 {
 public:
-	MapLabelStyleFactory();
-	~MapLabelStyleFactory();
+	MakerLabelStyleFactory();
+	~MakerLabelStyleFactory();
 
 public:
 	static void createLabelStyle(QgsPalLayerSettings& palLayerSettings, QString& fontFamily, double fontSize, QColor& textColor);

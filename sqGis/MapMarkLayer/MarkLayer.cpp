@@ -3,7 +3,7 @@
 #include "LineMarkLayer.h"
 #include "PolygonMarkLayer.h"
 #include "options.h"
-#include "./MapStyle/MapLabelStyleFactory.h"
+#include "./MapStyle/MakerLabelStyleFactory.h"
 #include "./MapStyle/MarkerSymbolFactory.h"
 
 #include <qgsvectorlayerlabeling.h>
@@ -53,6 +53,17 @@ MarkLayer* MarkLayer::createLayer(QgsWkbTypes::GeometryType mark_type)
 	return layer;
 }
 
+void MarkLayer::selectFeature(QgsFeatureId id, bool append)
+{
+	QgsFeatureIds ids;
+	if (append)
+		ids = selectedFeatureIds();
+	else removeSelection();
+
+	ids << id;
+	select(ids);
+}
+
 bool MarkLayer::searchFeature(QgsFeatureId id, QgsFeature& feature)
 {
 	QgsVectorDataProvider* provider = dataProvider();
@@ -77,15 +88,15 @@ void MarkLayer::activeLabeling(QgsWkbTypes::GeometryType mark_type, QString& fie
 	switch (mark_type)
 	{
 	case QgsWkbTypes::PointGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
+		MakerLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	case QgsWkbTypes::LineGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
+		MakerLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"),0.5);
 		layersettings.placement = QgsPalLayerSettings::Curved;
 		break;
 	case QgsWkbTypes::PolygonGeometry:
-		MapLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"), 0.5);
+		MakerLabelStyleFactory::createLabelStyle(layersettings, QStringLiteral("黑体"), 13, QColor("white"), QColor("black"), 0.5);
 		layersettings.placement = QgsPalLayerSettings::AroundPoint;
 		break;
 	}

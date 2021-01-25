@@ -1,17 +1,17 @@
-#include "MapLabelStyleFactory.h"
+#include "MakerLabelStyleFactory.h"
 
 
 
-MapLabelStyleFactory::MapLabelStyleFactory()
+MakerLabelStyleFactory::MakerLabelStyleFactory()
 {
 }
 
 
-MapLabelStyleFactory::~MapLabelStyleFactory()
+MakerLabelStyleFactory::~MakerLabelStyleFactory()
 {
 }
 
-void MapLabelStyleFactory::createLabelStyle(QgsPalLayerSettings& palLayerSettings, QString& fontFamily, double fontSize,QColor& textColor)
+void MakerLabelStyleFactory::createLabelStyle(QgsPalLayerSettings& palLayerSettings, QString& fontFamily, double fontSize,QColor& textColor)
 {
 	QgsTextFormat textFormat;
 	textFormat.setColor(textColor);
@@ -21,7 +21,7 @@ void MapLabelStyleFactory::createLabelStyle(QgsPalLayerSettings& palLayerSetting
 	palLayerSettings.setFormat(textFormat);
 }
 
-void MapLabelStyleFactory::createLabelStyle(QgsPalLayerSettings& palLayerSettings, QString& fontFamily, double fontSize, QColor& textColor, QColor& backgroundColor, double opacity)
+void MakerLabelStyleFactory::createLabelStyle(QgsPalLayerSettings& palLayerSettings, QString& fontFamily, double fontSize, QColor& textColor, QColor& backgroundColor, double opacity)
 {
 	QgsTextBackgroundSettings textBackgroundSettings;
 	textBackgroundSettings.setType(QgsTextBackgroundSettings::ShapeRectangle);
