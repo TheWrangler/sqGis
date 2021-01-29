@@ -73,8 +73,12 @@
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
-     <string>关于</string>
+     <string>帮助</string>
     </property>
+    <addaction name="action_15"/>
+    <addaction name="action_33"/>
+    <addaction name="action_34"/>
+    <addaction name="separator"/>
     <addaction name="aboutAction"/>
    </widget>
    <widget class="QMenu" name="menu_4">
@@ -87,20 +91,32 @@
     <addaction name="separator"/>
     <addaction name="navMsgReceiveAction"/>
     <addaction name="actionTT_C"/>
+    <addaction name="separator"/>
+    <addaction name="action_36"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
-     <string>测量</string>
+     <string>测量分析</string>
     </property>
     <addaction name="distanceAngleMeasureAction"/>
-    <addaction name="areaMeasureAction"/>
+    <addaction name="traceLengthMeasureAction"/>
+    <addaction name="separator"/>
+    <addaction name="action_12"/>
    </widget>
    <widget class="QMenu" name="menu_7">
     <property name="title">
      <string>无线通信应用</string>
     </property>
+    <addaction name="action_26"/>
+    <addaction name="action_22"/>
+    <addaction name="action_25"/>
+    <addaction name="separator"/>
     <addaction name="action_23"/>
-    <addaction name="action_24"/>
+    <addaction name="action_27"/>
+    <addaction name="action_29"/>
+    <addaction name="separator"/>
+    <addaction name="action_31"/>
+    <addaction name="action_32"/>
    </widget>
    <addaction name="menufile"/>
    <addaction name="menu"/>
@@ -132,6 +148,12 @@
    <addaction name="markLineAction"/>
    <addaction name="markPolygonAction"/>
    <addaction name="separator"/>
+   <addaction name="distanceAngleMeasureAction"/>
+   <addaction name="traceLengthMeasureAction"/>
+   <addaction name="separator"/>
+   <addaction name="action_26"/>
+   <addaction name="action_22"/>
+   <addaction name="action_25"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="zoomInAction">
@@ -232,23 +254,21 @@
    </property>
   </action>
   <action name="distanceAngleMeasureAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/ruler_x24</normaloff>:/img/ruler_x24</iconset>
+   </property>
    <property name="text">
-    <string>距离与角度</string>
+    <string>距离与角度测量尺</string>
    </property>
   </action>
-  <action name="areaMeasureAction">
-   <property name="text">
-    <string>面积</string>
+  <action name="traceLengthMeasureAction">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/trace_len_x24</normaloff>:/img/trace_len_x24</iconset>
    </property>
-  </action>
-  <action name="action_13">
    <property name="text">
-    <string>空间角度测量</string>
-   </property>
-  </action>
-  <action name="action_15">
-   <property name="text">
-    <string>投影角度测量</string>
+    <string>轨迹长度测量</string>
    </property>
   </action>
   <action name="action_17">
@@ -342,7 +362,7 @@
      <normaloff>:/img/trash_x24</normaloff>:/img/trash_x24</iconset>
    </property>
    <property name="text">
-    <string>移除图层</string>
+    <string>移除</string>
    </property>
   </action>
   <action name="action_6">
@@ -397,7 +417,7 @@
   </action>
   <action name="action_23">
    <property name="text">
-    <string>飞行航线通视分析</string>
+    <string>飞行航线空地链路分析</string>
    </property>
   </action>
   <action name="action_24">
@@ -408,6 +428,78 @@
   <action name="actionTT_C">
    <property name="text">
     <string>TT&amp;C接收器</string>
+   </property>
+  </action>
+  <action name="action_12">
+   <property name="text">
+    <string>临近搜索</string>
+   </property>
+  </action>
+  <action name="action_22">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/space_x24</normaloff>:/img/space_x24</iconset>
+   </property>
+   <property name="text">
+    <string>空衰测量尺</string>
+   </property>
+  </action>
+  <action name="action_25">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/link_x24</normaloff>:/img/link_x24</iconset>
+   </property>
+   <property name="text">
+    <string>链路余量测量尺</string>
+   </property>
+  </action>
+  <action name="action_26">
+   <property name="icon">
+    <iconset resource="sqGis.qrc">
+     <normaloff>:/img/los_x24</normaloff>:/img/los_x24</iconset>
+   </property>
+   <property name="text">
+    <string>通视测量尺</string>
+   </property>
+  </action>
+  <action name="action_27">
+   <property name="text">
+    <string>模拟飞行空地链路仿真</string>
+   </property>
+  </action>
+  <action name="action_29">
+   <property name="text">
+    <string>模拟飞行空空链路仿真</string>
+   </property>
+  </action>
+  <action name="action_31">
+   <property name="text">
+    <string>链路节点模型管理</string>
+   </property>
+  </action>
+  <action name="action_32">
+   <property name="text">
+    <string>天线模型管理</string>
+   </property>
+  </action>
+  <action name="action_15">
+   <property name="text">
+    <string>快速入门</string>
+   </property>
+  </action>
+  <action name="action_33">
+   <property name="text">
+    <string>使用指南</string>
+   </property>
+  </action>
+  <action name="action_34">
+   <property name="text">
+    <string>开发文档</string>
+   </property>
+  </action>
+  <action name="action_36">
+   <property name="text">
+    <string>选项</string>
    </property>
   </action>
  </widget>

@@ -1,32 +1,27 @@
 #pragma once
-#include <qgsmapcanvas.h>
-#include <qgsmapcanvasannotationitem.h>
-#include <qgstextannotation.h>
+#include "MeasureAnnotationItem.h"
 
-class DistanceMeasureAnnotationItem : public QgsMapCanvasAnnotationItem
+class DistanceMeasureAnnotationItem : public MeasureAnnotationItem
 {
 public:
 	DistanceMeasureAnnotationItem(QgsTextAnnotation* annotation, QgsMapCanvas* mapCanvas);
 	~DistanceMeasureAnnotationItem();
 
-protected:
-	static QString _format;
+	typedef enum tagDistanceMeasureRole
+	{
+		DistanceMeasureRole_SurfaceDistance = 0,
+		DistanceMeasureRole_SpaceDistance,
+		DistanceMeasureRole_Azi,
+		DistanceMeasureRole_Ele
+	}DistanceMeasureRole;
 
-	double _surfaceDistance;
-	double _spaceDistance;
-	double _azi;
-	double _ele;
+protected:
+	QString format() const;
 
 public:
-	void moveTo(QPoint point);
-
 	void updateSurfaceDistance(double distance);
 	void updateSpaceDistance(double distance);
 	void updateAzi(double azi);
 	void updateEle(double ele);
-	void updateAll(double surfaceDistance, double spaceDistance, double azi, double ele);
-
-public:
-	static DistanceMeasureAnnotationItem* create(QgsMapCanvas* mapCanvas,QgsMapLayer* layer = NULL);
 };
 

@@ -1,5 +1,5 @@
 #include "LineMarkLayer.h"
-#include "options.h"
+#include "../options.h"
 
 
 LineMarkLayer::LineMarkLayer(QString layername)

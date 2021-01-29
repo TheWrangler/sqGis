@@ -1,7 +1,7 @@
 #include "PointMarkLayer.h"
 #include <qgsfeature.h>
 #include <qgsgeometry.h>
-#include "options.h"
+#include "../options.h"
 
 PointMarkLayer::PointMarkLayer(QString layername)
 	:MarkLayer("Point?crs=epsg:3857&index=yes&field=name:string(255)&field=category:string(255)&field=state:string(255)&field=svg:string(255)&field=rotation:double(5,2)&field=size:double(3,1)", layername)

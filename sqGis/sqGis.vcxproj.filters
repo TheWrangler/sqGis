@@ -26,9 +26,6 @@
     <Filter Include="LogQt5">
       <UniqueIdentifier>{887d4cda-2e7e-4833-8a7d-689e9d773d46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MapTool">
-      <UniqueIdentifier>{fc6c6d44-7d48-4632-a3c1-9bdc6803df3e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MapStyle">
       <UniqueIdentifier>{e8239479-1b9c-4ea6-938c-2b94d00d2355}</UniqueIdentifier>
     </Filter>
@@ -44,8 +41,11 @@
     <Filter Include="MapLayerFeature">
       <UniqueIdentifier>{c9e9565a-1a8d-45e3-aaa6-64171dd2a22c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="WirelessMath">
-      <UniqueIdentifier>{763ae1b5-5fda-4936-a5c6-7bedcc7da0aa}</UniqueIdentifier>
+    <Filter Include="MapMarkTool">
+      <UniqueIdentifier>{fc6c6d44-7d48-4632-a3c1-9bdc6803df3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapMeasureTool">
+      <UniqueIdentifier>{022a7324-496a-49c7-a666-c9d759e675e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,26 +70,8 @@
     <ClCompile Include="LayerManagerFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapTool\MapToolMarkPoint.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolMovePoint.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
     <ClCompile Include="FeatureEditDlg.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolMarkSelect.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolMarkLine.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolMarkPolygon.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolMarkAbstract.cpp">
-      <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="NavMsgReceiverDlg.cpp">
       <Filter>Source Files</Filter>
@@ -99,9 +81,6 @@
     </ClCompile>
     <ClCompile Include="MapStyle\MakerLabelStyleFactory.cpp">
       <Filter>MapStyle</Filter>
-    </ClCompile>
-    <ClCompile Include="MapTool\MapToolDistanceMeasure.cpp">
-      <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="MapLayerFeature\LineMarkFeature.cpp">
       <Filter>MapLayerFeature</Filter>
@@ -130,20 +109,44 @@
     <ClCompile Include="MapCanvasItem\DistanceMeasureAnnotationItem.cpp">
       <Filter>MapCanvasItem</Filter>
     </ClCompile>
-    <ClCompile Include="WirelessMath\WmVertex.cpp">
-      <Filter>WirelessMath</Filter>
+    <ClCompile Include="MapCanvasItem\MeasureAnnotationItem.cpp">
+      <Filter>MapCanvasItem</Filter>
     </ClCompile>
-    <ClCompile Include="WirelessMath\WmTransformMatrix.cpp">
-      <Filter>WirelessMath</Filter>
+    <ClCompile Include="MapCanvasItem\AreaMeasureAnnotationItem.cpp">
+      <Filter>MapCanvasItem</Filter>
     </ClCompile>
-    <ClCompile Include="WirelessMath\WmConstVariable.cpp">
-      <Filter>WirelessMath</Filter>
+    <ClCompile Include="MapMeasure\MapMeasureInterface.cpp">
+      <Filter>MapMeasure</Filter>
     </ClCompile>
-    <ClCompile Include="WirelessMath\WmGeoCalculator.cpp">
-      <Filter>WirelessMath</Filter>
+    <ClCompile Include="MapMarkTool\MapToolMarkAbstract.cpp">
+      <Filter>MapMarkTool</Filter>
     </ClCompile>
-    <ClCompile Include="MapTool\MapToolMath.cpp">
-      <Filter>MapTool</Filter>
+    <ClCompile Include="MapMarkTool\MapToolMarkLine.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarkTool\MapToolMarkPoint.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarkTool\MapToolMarkPolygon.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarkTool\MapToolMarkSelect.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarkTool\MapToolMath.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMarkTool\MapToolMovePoint.cpp">
+      <Filter>MapMarkTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMeasure\MapMeasureDistance.cpp">
+      <Filter>MapMeasure</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMeasureTool\MapToolMeasureLine.cpp">
+      <Filter>MapMeasureTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMeasure\MapMeasureLine.cpp">
+      <Filter>MapMeasure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,23 +171,23 @@
     <QtMoc Include="FeatureEditDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="MapTool\MapToolMarkPoint.h">
-      <Filter>MapTool</Filter>
-    </QtMoc>
-    <QtMoc Include="MapTool\MapToolMarkLine.h">
-      <Filter>MapTool</Filter>
-    </QtMoc>
-    <QtMoc Include="MapTool\MapToolMarkPolygon.h">
-      <Filter>MapTool</Filter>
-    </QtMoc>
-    <QtMoc Include="MapTool\MapToolMarkAbstract.h">
-      <Filter>MapTool</Filter>
-    </QtMoc>
     <QtMoc Include="NavMsgReceiverDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="MapTool\MapToolDistanceMeasure.h">
-      <Filter>MapTool</Filter>
+    <QtMoc Include="MapMarkTool\MapToolMarkAbstract.h">
+      <Filter>MapMarkTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapMarkTool\MapToolMarkLine.h">
+      <Filter>MapMarkTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapMarkTool\MapToolMarkPoint.h">
+      <Filter>MapMarkTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapMarkTool\MapToolMarkPolygon.h">
+      <Filter>MapMarkTool</Filter>
+    </QtMoc>
+    <QtMoc Include="MapMeasureTool\MapToolMeasureLine.h">
+      <Filter>MapMeasureTool</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -222,17 +225,11 @@
     <ClInclude Include="MapLayerManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MapTool\MapToolMarkSelect.h">
-      <Filter>MapTool</Filter>
-    </ClInclude>
     <ClInclude Include="MapStyle\MarkerSymbolFactory.h">
       <Filter>MapStyle</Filter>
     </ClInclude>
     <ClInclude Include="MapStyle\MakerLabelStyleFactory.h">
       <Filter>MapStyle</Filter>
-    </ClInclude>
-    <ClInclude Include="MapTool\MapToolMovePoint.h">
-      <Filter>MapTool</Filter>
     </ClInclude>
     <ClInclude Include="MapLayerFeature\LineMarkFeature.h">
       <Filter>MapLayerFeature</Filter>
@@ -261,20 +258,29 @@
     <ClInclude Include="MapCanvasItem\DistanceMeasureAnnotationItem.h">
       <Filter>MapCanvasItem</Filter>
     </ClInclude>
-    <ClInclude Include="WirelessMath\WmVertex.h">
-      <Filter>WirelessMath</Filter>
+    <ClInclude Include="MapCanvasItem\MeasureAnnotationItem.h">
+      <Filter>MapCanvasItem</Filter>
     </ClInclude>
-    <ClInclude Include="WirelessMath\WmTransformMatrix.h">
-      <Filter>WirelessMath</Filter>
+    <ClInclude Include="MapCanvasItem\AreaMeasureAnnotationItem.h">
+      <Filter>MapCanvasItem</Filter>
     </ClInclude>
-    <ClInclude Include="WirelessMath\WmConstVariable.h">
-      <Filter>WirelessMath</Filter>
+    <ClInclude Include="MapMarkTool\MapToolMarkSelect.h">
+      <Filter>MapMarkTool</Filter>
     </ClInclude>
-    <ClInclude Include="WirelessMath\WmGeoCalculator.h">
-      <Filter>WirelessMath</Filter>
+    <ClInclude Include="MapMarkTool\MapToolMath.h">
+      <Filter>MapMarkTool</Filter>
     </ClInclude>
-    <ClInclude Include="MapTool\MapToolMath.h">
-      <Filter>MapTool</Filter>
+    <ClInclude Include="MapMarkTool\MapToolMovePoint.h">
+      <Filter>MapMarkTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMeasure\MapMeasureDistance.h">
+      <Filter>MapMeasure</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMeasure\MapMeasureInterface.h">
+      <Filter>MapMeasure</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMeasure\MapMeasureLine.h">
+      <Filter>MapMeasure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

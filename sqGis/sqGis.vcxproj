@@ -79,15 +79,15 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OSGeo4W\apps\qgis-ltr\include;D:\OSGeo4W\include;F:\sqGis\GeoCalculator\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>qgis_core.lib;qgis_app.lib;qgis_gui.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OSGeo4W\apps\qgis-ltr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qgis_core.lib;qgis_app.lib;qgis_gui.lib;f:\sqGis\GeoCalculator\lib\GeoCalculator.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\sqGis\lib;D:\OSGeo4W\apps\qgis-ltr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -97,7 +97,9 @@
     <ClCompile Include="LayerManagerFrame.cpp" />
     <ClCompile Include="LogQt5\LogHandlerWrapper.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapCanvasItem\AreaMeasureAnnotationItem.cpp" />
     <ClCompile Include="MapCanvasItem\DistanceMeasureAnnotationItem.cpp" />
+    <ClCompile Include="MapCanvasItem\MeasureAnnotationItem.cpp" />
     <ClCompile Include="MapLayerFeature\LineMarkFeature.cpp" />
     <ClCompile Include="MapLayerFeature\MarkFeature.cpp" />
     <ClCompile Include="MapLayerFeature\PointMarkFeature.cpp" />
@@ -107,22 +109,21 @@
     <ClCompile Include="MapMarkLayer\MarkLayer.cpp" />
     <ClCompile Include="MapMarkLayer\PointMarkLayer.cpp" />
     <ClCompile Include="MapMarkLayer\PolygonMarkLayer.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMarkAbstract.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMarkLine.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMarkPoint.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMarkPolygon.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMarkSelect.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMath.cpp" />
+    <ClCompile Include="MapMarkTool\MapToolMovePoint.cpp" />
+    <ClCompile Include="MapMeasureTool\MapToolMeasureLine.cpp" />
+    <ClCompile Include="MapMeasure\MapMeasureInterface.cpp" />
+    <ClCompile Include="MapMeasure\MapMeasureDistance.cpp" />
+    <ClCompile Include="MapMeasure\MapMeasureLine.cpp" />
     <ClCompile Include="MapStyle\MakerLabelStyleFactory.cpp" />
     <ClCompile Include="MapStyle\MarkerSymbolFactory.cpp" />
-    <ClCompile Include="MapTool\MapToolDistanceMeasure.cpp" />
-    <ClCompile Include="MapTool\MapToolMarkAbstract.cpp" />
-    <ClCompile Include="MapTool\MapToolMarkLine.cpp" />
-    <ClCompile Include="MapTool\MapToolMarkPoint.cpp" />
-    <ClCompile Include="MapTool\MapToolMarkPolygon.cpp" />
-    <ClCompile Include="MapTool\MapToolMarkSelect.cpp" />
-    <ClCompile Include="MapTool\MapToolMath.cpp" />
-    <ClCompile Include="MapTool\MapToolMovePoint.cpp" />
     <ClCompile Include="NavMsgReceiverDlg.cpp" />
     <ClCompile Include="sqGisMainWindow.cpp" />
-    <ClCompile Include="WirelessMath\WmConstVariable.cpp" />
-    <ClCompile Include="WirelessMath\WmGeoCalculator.cpp" />
-    <ClCompile Include="WirelessMath\WmTransformMatrix.cpp" />
-    <ClCompile Include="WirelessMath\WmVertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="sqGis.qrc" />
@@ -142,11 +143,18 @@
     <QtMoc Include="ConvertCoorDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MapTool\MapToolMath.h" />
-    <ClInclude Include="WirelessMath\WmConstVariable.h" />
-    <ClInclude Include="WirelessMath\WmGeoCalculator.h" />
-    <ClInclude Include="WirelessMath\WmTransformMatrix.h" />
-    <ClInclude Include="WirelessMath\WmVertex.h" />
+    <ClInclude Include="MapCanvasItem\AreaMeasureAnnotationItem.h" />
+    <ClInclude Include="MapCanvasItem\MeasureAnnotationItem.h" />
+    <ClInclude Include="MapMeasure\MapMeasureInterface.h" />
+    <QtMoc Include="MapMarkTool\MapToolMarkAbstract.h" />
+    <QtMoc Include="MapMarkTool\MapToolMarkLine.h" />
+    <QtMoc Include="MapMarkTool\MapToolMarkPoint.h" />
+    <QtMoc Include="MapMarkTool\MapToolMarkPolygon.h" />
+    <ClInclude Include="MapMarkTool\MapToolMarkSelect.h" />
+    <ClInclude Include="MapMarkTool\MapToolMath.h" />
+    <ClInclude Include="MapMarkTool\MapToolMovePoint.h" />
+    <QtMoc Include="MapMeasureTool\MapToolMeasureLine.h" />
+    <ClInclude Include="MapMeasure\MapMeasureDistance.h" />
     <QtMoc Include="LogQt5\LogHandlerWrapper.h" />
     <QtMoc Include="LogQt5\LogTextEdit.h" />
     <QtMoc Include="LayerManagerFrame.h" />
@@ -157,19 +165,13 @@
     <ClInclude Include="MapLayerFeature\PointMarkFeature.h" />
     <ClInclude Include="MapLayerFeature\PolygonMarkFeature.h" />
     <ClInclude Include="MapLayerManager.h" />
-    <QtMoc Include="MapTool\MapToolMarkPoint.h" />
-    <QtMoc Include="MapTool\MapToolMarkLine.h" />
-    <QtMoc Include="MapTool\MapToolMarkPolygon.h" />
-    <QtMoc Include="MapTool\MapToolMarkAbstract.h" />
     <ClInclude Include="MapMarkLayer\LineMarkLayer.h" />
     <ClInclude Include="MapMarkLayer\MarkLayer.h" />
     <ClInclude Include="MapMarkLayer\PointMarkLayer.h" />
     <ClInclude Include="MapMarkLayer\PolygonMarkLayer.h" />
+    <ClInclude Include="MapMeasure\MapMeasureLine.h" />
     <ClInclude Include="MapStyle\MakerLabelStyleFactory.h" />
     <ClInclude Include="MapStyle\MarkerSymbolFactory.h" />
-    <QtMoc Include="MapTool\MapToolDistanceMeasure.h" />
-    <ClInclude Include="MapTool\MapToolMarkSelect.h" />
-    <ClInclude Include="MapTool\MapToolMovePoint.h" />
     <QtMoc Include="NavMsgReceiverDlg.h" />
     <ClInclude Include="options.h" />
     <ClInclude Include="resource.h" />

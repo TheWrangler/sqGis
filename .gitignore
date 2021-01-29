@@ -1,7 +1,10 @@
+/ipch
 /sqGis.VC.db
 /Win32/Debug
 /Win32/Release/*.dll
 /Win32/Release/*.exe
+/Win32/Release/*.lib
+/Win32/Release/*.exp
 /Win32/Release/logs
 !/Win32/Release/configs
 !/Win32/Release/marks
@@ -11,3 +14,5 @@
 /sqGis/Debug
 /sqGis/Release
 /sqGis/gdalwmscache
+/QGis3Extension/Release
+/QGis3Extension/Debug

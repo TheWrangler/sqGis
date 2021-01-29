@@ -7,6 +7,7 @@
 #include "./MapMarkLayer/MarkLayer.h"
 #include "./MapMarkLayer/PointMarkLayer.h"
 #include "./MapLayerFeature/MarkFeature.h"
+#include "./MapMeasure/MapMeasureDistance.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -134,8 +135,8 @@ void sqGisMainWindow::initMapTools()
 	_mapToolMarkPolygon = new MapToolMarkPolygon(_mapCanvas, NULL);
 	_mapToolMarkPolygon->setAction(ui.markPolygonAction);
 
-	_mapToolDistanceMeasure = new MapToolDistanceMeasure(_mapCanvas, NULL);
-	_mapToolDistanceMeasure->setAction(ui.distanceAngleMeasureAction);
+	_mapToolMeasureDistance = new MapToolMeasureLine(_mapCanvas);
+	_mapToolMeasureDistance->setAction(ui.distanceAngleMeasureAction);
 
 	//连接鼠标在画布上移动的信号
 	connect(_mapCanvas, SIGNAL(xyCoordinates(QgsPointXY)), this, SLOT(showCursorCoor(QgsPointXY)));
@@ -404,16 +405,11 @@ void sqGisMainWindow::on_markPolygonAction_triggered()
 
 void sqGisMainWindow::on_distanceAngleMeasureAction_triggered()
 {
-	MarkLayer* layer = (MarkLayer*)(_mapLayerManager->getMapLayer(QStringLiteral("线标绘图层")));
-	if (layer == NULL)
-	{
-		layer = MarkLayer::createLayer(QgsWkbTypes::LineGeometry);
-		_layerManagerFrame->addMapLayerToView(layer, MapLayerManager::MapLayerRole_Mark);
-		refreshMapCanvas();
-	}
+	if (_mapToolMeasureDistance->measureInterface() != NULL)
+		_mapToolMeasureDistance->removeMeasureInterface();
 
-	_mapToolDistanceMeasure->setDestMarkLayer(layer);
-	_mapCanvas->setMapTool(_mapToolDistanceMeasure);
+	_mapToolMeasureDistance->setMeasureInterface(new MapMeasureDistance());
+	_mapCanvas->setMapTool(_mapToolMeasureDistance);
 }
 
 void sqGisMainWindow::on_convertCoorAction_triggered()

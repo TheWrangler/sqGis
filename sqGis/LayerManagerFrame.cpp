@@ -178,6 +178,9 @@ bool LayerManagerFrame::addMapLayerToView(QgsMapLayer* layer, MapLayerManager::M
 #endif
 
 	_mapLayerManager->addMapLayer(layer, role, visible);
+
+	ui.mapLayerTreeView->expandAll();
+
 	return true;
 }
 

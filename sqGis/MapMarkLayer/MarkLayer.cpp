@@ -2,9 +2,9 @@
 #include "PointMarkLayer.h"
 #include "LineMarkLayer.h"
 #include "PolygonMarkLayer.h"
-#include "options.h"
-#include "./MapStyle/MakerLabelStyleFactory.h"
-#include "./MapStyle/MarkerSymbolFactory.h"
+#include "../options.h"
+#include "../MapStyle/MakerLabelStyleFactory.h"
+#include "../MapStyle/MarkerSymbolFactory.h"
 
 #include <qgsvectorlayerlabeling.h>
 #include <qgsrenderer.h>

@@ -9,7 +9,7 @@ PolygonMarkFeature::PolygonMarkFeature(const QString& name)
 	_strokeColor = "cyan";
 	_strokeStyle = "dot";
 	_filledColor = "red";
-	_filledStyle = "dense5";
+	_filledStyle = "dense6";
 }
 
 

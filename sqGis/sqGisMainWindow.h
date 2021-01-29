@@ -11,11 +11,11 @@
 #include "LayerManagerFrame.h"
 #include "./LogQt5/LogHandlerWrapper.h"
 #include "./LogQt5/LogTextEdit.h"
-#include "./MapTool/MapToolMarkSelect.h"
-#include "./MapTool/MapToolMarkPoint.h"
-#include "./MapTool/MapToolMarkLine.h"
-#include "./MapTool/MapToolMarkPolygon.h"
-#include "./MapTool/MapToolDistanceMeasure.h"
+#include "./MapMarkTool/MapToolMarkSelect.h"
+#include "./MapMarkTool/MapToolMarkPoint.h"
+#include "./MapMarkTool/MapToolMarkLine.h"
+#include "./MapMarkTool/MapToolMarkPolygon.h"
+#include "./MapMeasureTool/MapToolMeasureLine.h"
 
 #include <qgsmapcanvas.h>
 #include <qgsmaplayer.h>
@@ -59,7 +59,7 @@ protected:
 	MapToolMarkPolygon *_mapToolMarkPolygon;//标绘多边形
 
 	//测量工具
-	MapToolDistanceMeasure *_mapToolDistanceMeasure;//距离测量工具
+	MapToolMeasureLine *_mapToolMeasureDistance;//线测量工具
 
 protected:
 	void initDockWidgets();
